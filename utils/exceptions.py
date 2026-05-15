@@ -13,3 +13,15 @@ class PermissionDenied(GraphQLError):
         super().__init__(
             message or self.message, extensions={"code": "PERMISSION_DENIED"}
         )
+
+
+class Unauthorized(GraphQLError):
+    """
+    Raised when user is not logged in
+    or token is invalid
+    """
+
+    message = _("You are not authorized to perform this action.")
+
+    def __init__(self, message=None):
+        super().__init__(self.message, extensions={"code": "UNAUTHORIZED"})
