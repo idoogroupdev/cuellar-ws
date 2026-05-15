@@ -140,3 +140,7 @@ STORAGES = {
         "BACKEND": "storages.backends.s3.S3Storage",
     },
 }
+
+# NOTE: This is only used in development, never in production!
+SUPERUSER_EMAIL = config("SUPERUSER_EMAIL", default="superuser@example.com")
+SUPERUSER_PASSWORD = config("SUPERUSER_PASSWORD", default="superuser")

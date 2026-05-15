@@ -3,6 +3,7 @@ set -e
 
 python manage.py migrate
 python manage.py setup_roles
+python manage.py setup_superuser
 python manage.py createcachetable
 
 # Run collectstatic if needed
