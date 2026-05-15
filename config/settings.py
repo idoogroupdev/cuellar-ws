@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "roles",
     "users",
+    "graphene_django",
 ]
 
 
@@ -107,3 +108,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
+
+
+GRAPHENE = {"SCHEMA": "config.schema.schema"}
