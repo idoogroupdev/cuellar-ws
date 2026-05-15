@@ -51,9 +51,10 @@ class Command(BaseCommand):
 
         self.setup_client()
         self.setup_salesperson()
-        self.setup_delivery()
+        self.setup_delivery_driver()
         self.setup_admin()
         self.setup_operator()
+        self.setup_branch_operator()
 
     def setup_client(self):
 
@@ -67,9 +68,9 @@ class Command(BaseCommand):
 
         create_permission_groups(roles)
 
-    def setup_delivery(self):
+    def setup_delivery_driver(self):
 
-        roles = {DefaultSystemRole.DELIVERY.value: {}}
+        roles = {DefaultSystemRole.DELIVERY_DRIVER.value: {}}
 
         create_permission_groups(roles)
 
@@ -82,5 +83,11 @@ class Command(BaseCommand):
     def setup_operator(self):
 
         roles = {DefaultSystemRole.OPERATOR.value: {}}
+
+        create_permission_groups(roles)
+
+    def setup_branch_operator(self):
+
+        roles = {DefaultSystemRole.BRANCH_OPERATOR.value: {}}
 
         create_permission_groups(roles)

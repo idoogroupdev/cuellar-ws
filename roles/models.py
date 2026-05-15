@@ -6,9 +6,10 @@ from django.utils.translation import gettext_lazy as _
 class DefaultSystemRole(models.TextChoices):
     CLIENT = "CLIENT"
     SALESPERSON = "SALESPERSON"
-    DELIVERY = "DELIVERY"
+    DELIVERY_DRIVER = "DELIVERY_DRIVER"
     ADMIN = "ADMIN"
     OPERATOR = "OPERATOR"
+    BRANCH_OPERATOR = "BRANCH_OPERATOR"
 
 
 class Role(models.Model):
