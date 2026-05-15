@@ -1,5 +1,19 @@
+from django.contrib.auth.models import Group
 from django.db import models
 
 
 class DefaultSystemRole(models.TextChoices):
-    pass
+    CLIENT = "CLIENT"
+    SALESPERSON = "SALESPERSON"
+    DELIVERY = "DELIVERY"
+    ADMIN = "ADMIN"
+    OPERATOR = "OPERATOR"
+
+
+class Role(models.Model):
+    group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name="role")
+    name = models.CharField(
+        max_length=16, unique=True, choices=DefaultSystemRole.choices, db_index=True
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
