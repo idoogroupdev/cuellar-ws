@@ -2,5 +2,8 @@
 .pytest_cache
 .env
 .coverage
+.vscode
+.codex
+.agents
 __pycache__
 cov_html
