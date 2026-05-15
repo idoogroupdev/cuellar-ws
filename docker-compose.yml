@@ -1,0 +1,8 @@
+services:
+  backend:
+    build: .
+    expose:
+      - 80
+    env_file:
+      - ./.env
+    restart: unless-stopped
