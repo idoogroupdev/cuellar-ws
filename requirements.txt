@@ -3,3 +3,4 @@ python-decouple==3.8
 django-filter==25.2
 stripe==15.1.0
 graphene-django==3.2.3
+django-graphql-jwt==0.4.0
