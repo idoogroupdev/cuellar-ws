@@ -1,9 +1,11 @@
 .venv
 .pytest_cache
 .env
+!.env.example
 .coverage
 .vscode
 .codex
 .agents
+.ruff_cache
 __pycache__
 cov_html
