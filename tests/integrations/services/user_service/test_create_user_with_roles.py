@@ -68,3 +68,21 @@ def test_create_user_with_roles(setup_system_roles):
     assert set(user.groups.all()) == set(
         Group.objects.filter(name__in=role_names).all()
     )
+
+
+@pytest.mark.django_db
+def test_create_user_with_roles_email_already_exists(setup_system_roles):
+    email = fake.email()
+
+    UserService.create_user_with_roles(
+        email=email,
+        password=fake.password(),
+        role_names=[DefaultSystemRole.CLIENT],
+    )
+
+    with pytest.raises(ValidationError):
+        UserService.create_user_with_roles(
+            email=email,
+            password=fake.password(),
+            role_names=[DefaultSystemRole.CLIENT],
+        )

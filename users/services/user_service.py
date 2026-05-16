@@ -48,12 +48,14 @@ class UserService:
 
         username = generate_unique_username(email)
 
-        user = User.objects.create_user(
+        user = User(
             username=username,
             email=email,
-            password=password,
             **extra_fields,
         )
+        user.set_password(password)
+        user.full_clean()
+        user.save()
 
         user.roles.set(roles)
         user.groups.set([role.group for role in roles])
