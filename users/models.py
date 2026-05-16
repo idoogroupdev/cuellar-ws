@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from roles.models import Role
+from utils.functions.generate_unique_code import generate_unique_code
 
 
 class User(AbstractUser):
@@ -38,8 +39,18 @@ class AccountVerification(models.Model):
     def is_verified(self):
         return self.verified_at is not None
 
-    def mark_verified(self):
-        self.verified_at = timezone.now()
+    def mark_as_verified(self):
         self.user.is_verified = True
         self.user.save()
+
+        self.verified_at = timezone.now()
+        self.code = None
         self.save()
+
+    def generate_code(self):
+        self.code = generate_unique_code(self.__class__)
+        self.expires_at = default_code_expiration()
+        self.save()
+
+    def is_valid_code(self, code: str):
+        return self.code == code and not self.is_expired()
