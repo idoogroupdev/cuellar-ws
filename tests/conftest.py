@@ -10,8 +10,8 @@ def setup_system_roles():
 
 
 @pytest.fixture
-def client_query(client, setup_system_roles):
+def client_query(client):
     def func(*args, **kwargs):
-        return graphql_query(*args, **kwargs, client=client)
+        return graphql_query(*args, **kwargs, client=client, graphql_url="/graphql/")
 
     return func
