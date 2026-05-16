@@ -3,7 +3,7 @@ from typing import Literal, Union
 from django.db.models import Model
 from graphql_jwt.decorators import user_passes_test
 
-from utils.exceptions import PermissionDenied, Unauthorized
+from utils.exceptions import PermissionDenied, Unauthorized, UserNotVerified
 
 
 def permission_required(
@@ -21,6 +21,9 @@ def permission_required(
 
         if not user.is_authenticated:
             raise Unauthorized
+
+        if not user.is_verified:
+            raise UserNotVerified
 
         if isinstance(actions, str):
             perms = (f"{app_label}.{actions}_{model_name}",)

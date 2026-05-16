@@ -25,3 +25,14 @@ class Unauthorized(GraphQLError):
 
     def __init__(self, message=None):
         super().__init__(self.message, extensions={"code": "UNAUTHORIZED"})
+
+
+class UserNotVerified(GraphQLError):
+    """
+    Raised when user is not verified
+    """
+
+    message = _("Your account is not verified.")
+
+    def __init__(self, message=None):
+        super().__init__(self.message, extensions={"code": "USER_NOT_VERIFIED"})

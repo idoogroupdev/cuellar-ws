@@ -5,7 +5,7 @@ from graphql import GraphQLResolveInfo
 
 from users.models import User
 from utils.decorators import permission_required
-from utils.exceptions import PermissionDenied, Unauthorized
+from utils.exceptions import PermissionDenied, Unauthorized, UserNotVerified
 
 
 def build_info(context):
@@ -88,3 +88,18 @@ def test_permission_required_builds_multiple_permission_strings():
         resolver(None, info)
 
     user.has_perms.assert_called_once_with(["users.view_user", "users.change_user"])
+
+
+@pytest.mark.django_db
+def test_permission_required_raises_user_not_verified():
+    user = Mock(is_authenticated=True, is_verified=False)
+
+    context = Mock(user=user)
+    info = build_info(context)
+
+    @permission_required(User, "view")
+    def resolver(root, info):
+        return "ok"
+
+    with pytest.raises(UserNotVerified):
+        resolver(None, info)
