@@ -1,4 +1,5 @@
 from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
@@ -19,7 +20,11 @@ class UserService:
         **extra_fields,
     ) -> User:
 
-        validate_password(password)
+        try:
+            validate_password(password)
+        except ValidationError as exc:
+            raise ValidationError(exc.messages[0]) from exc
+
         validate_email(email)
 
         if not role_names:
