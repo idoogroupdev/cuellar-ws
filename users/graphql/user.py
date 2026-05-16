@@ -3,6 +3,7 @@ from graphene_django import DjangoObjectType
 
 from roles.graphql.roles import PermissionNode, RoleNode
 from users.models import User
+from utils.decorators import login_required
 
 
 class UserNode(DjangoObjectType):
@@ -29,3 +30,14 @@ class UserNode(DjangoObjectType):
 
     def resolve_permissions(self, info):
         return self.user_permissions.all()
+
+
+class Query(graphene.ObjectType):
+    me = graphene.Field(UserNode)
+
+    @login_required
+    def resolve_me(self, info):
+        return info.context.user
+
+
+schema = graphene.Schema(query=Query)

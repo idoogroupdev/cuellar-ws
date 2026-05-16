@@ -36,3 +36,6 @@ def permission_required(
         return has_perms
 
     return user_passes_test(check_perms, exc=PermissionDenied)
+
+
+login_required = user_passes_test(lambda u: u.is_authenticated, exc=Unauthorized)
