@@ -36,3 +36,19 @@ class UserNotVerified(GraphQLError):
 
     def __init__(self, message=None):
         super().__init__(self.message, extensions={"code": "USER_NOT_VERIFIED"})
+
+
+class ValidationGraphQLError(GraphQLError):
+    message = _("Validation error")
+
+    def __init__(
+        self,
+        fields: dict,
+    ):
+        super().__init__(
+            self.message,
+            extensions={
+                "code": "VALIDATION_ERROR",
+                "fields": fields,
+            },
+        )
