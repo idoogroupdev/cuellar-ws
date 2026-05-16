@@ -12,7 +12,7 @@ fake = Faker()
 @pytest.mark.django_db
 def test_create_user_with_roles_empty_role_names():
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValidationError):
         UserService.create_user_with_roles(
             email=fake.email(),
             password=fake.password(),
@@ -23,7 +23,7 @@ def test_create_user_with_roles_empty_role_names():
 @pytest.mark.django_db
 def test_create_user_with_roles_role_not_exists(setup_system_roles):
 
-    with pytest.raises(ValueError, match="Roles not found: not_existing_role"):
+    with pytest.raises(ValidationError):
         UserService.create_user_with_roles(
             email=fake.email(),
             password=fake.password(),

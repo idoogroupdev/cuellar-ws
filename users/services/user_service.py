@@ -11,24 +11,25 @@ from utils.functions.generate_unique_username import generate_unique_username
 
 class UserService:
     @staticmethod
-    @transaction.atomic
-    def create_user_with_roles(
-        *,
-        email: str,
-        password: str,
-        role_names: list[str | DefaultSystemRole],
-        **extra_fields,
-    ) -> User:
-
+    def validate_password(password: str):
         try:
             validate_password(password)
         except ValidationError as exc:
-            raise ValidationError(exc.messages[0]) from exc
+            raise ValidationError({"password": exc.messages[0]}) from exc
 
-        validate_email(email)
+    @staticmethod
+    def validate_email(email: str):
+        try:
+            validate_email(email)
+        except ValidationError as exc:
+            raise ValidationError({"email": exc.message}) from exc
+
+    @staticmethod
+    def validate_role_names(role_names: list[str | DefaultSystemRole]):
+        """Validate role names and return a list of roles"""
 
         if not role_names:
-            raise ValueError(_("At least one role is required"))
+            raise ValidationError({"role_names": _("At least one role is required")})
 
         normalized_role_names = [
             role.value if isinstance(role, DefaultSystemRole) else role
@@ -42,9 +43,28 @@ class UserService:
         missing_roles = list(set(unique_role_names) - found_role_names)
 
         if missing_roles:
-            raise ValueError(
-                _("Roles not found: %(roles)s") % {"roles": ", ".join(missing_roles)}
+            raise ValidationError(
+                {
+                    "role_names": _("Roles not found: %(roles)s")
+                    % {"roles": ", ".join(missing_roles)}
+                }
             )
+
+        return roles
+
+    @staticmethod
+    @transaction.atomic
+    def create_user_with_roles(
+        *,
+        email: str,
+        password: str,
+        role_names: list[str | DefaultSystemRole],
+        **extra_fields,
+    ) -> User:
+
+        UserService.validate_password(password)
+        UserService.validate_email(email)
+        roles = UserService.validate_role_names(role_names)
 
         username = generate_unique_username(email)
 
