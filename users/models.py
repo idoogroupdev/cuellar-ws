@@ -1,12 +1,45 @@
+from datetime import timedelta
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
 from roles.models import Role
 
 
 class User(AbstractUser):
     email = models.EmailField(_("email address"), unique=True)
     roles = models.ManyToManyField(Role)
+    is_verified = models.BooleanField(default=False)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
+
+
+def default_code_expiration():
+    return timezone.now() + timedelta(minutes=10)
+
+
+class AccountVerification(models.Model):
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="verification"
+    )
+    code = models.CharField(max_length=6, null=True, blank=True, db_index=True)
+    expires_at = models.DateTimeField(
+        default=default_code_expiration, null=True, blank=True
+    )
+    verified_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_expired(self):
+        return self.expires_at is not None and self.expires_at < timezone.now()
+
+    def is_verified(self):
+        return self.verified_at is not None
+
+    def mark_verified(self):
+        self.verified_at = timezone.now()
+        self.user.is_verified = True
+        self.user.save()
+        self.save()
