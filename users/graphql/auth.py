@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from roles.models import DefaultSystemRole
 from users.graphql.user import UserNode
 from users.services.user_service import UserService
-from utils.exceptions import ValidationGraphQLError
+from utils.exceptions import UserNotVerified, ValidationGraphQLError
 
 
 class RegisterUserInput(graphene.InputObjectType):
@@ -32,8 +32,18 @@ class RegisterClient(graphene.Mutation):
         return RegisterClient(user=user)
 
 
+class Login(graphql_jwt.ObtainJSONWebToken):
+    user = graphene.Field(UserNode)
+
+    @classmethod
+    def resolve(cls, root, info, **kwargs):
+        if not info.context.user.is_verified:
+            raise UserNotVerified
+        return cls(user=info.context.user)
+
+
 class Mutation(graphene.ObjectType):
-    login = graphql_jwt.ObtainJSONWebToken.Field()
+    login = Login.Field()
     verify_token = graphql_jwt.Verify.Field()
     refresh_token = graphql_jwt.Refresh.Field()
     revoke_token = graphql_jwt.Revoke.Field()
