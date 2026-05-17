@@ -11,7 +11,9 @@ from utils.functions.generate_unique_code import generate_unique_code
 
 class User(AbstractUser):
     email = models.EmailField(_("email address"), unique=True)
-    roles = models.ManyToManyField(Role)
+    role = models.ForeignKey(
+        Role, on_delete=models.SET_NULL, related_name="users", null=True, blank=True
+    )
     is_verified = models.BooleanField(default=False)
 
     USERNAME_FIELD = "email"

@@ -10,63 +10,68 @@ fake = Faker()
 
 
 @pytest.mark.django_db
-def test_create_user_with_roles_empty_role_names():
+def test_create_user_with_roles_empty_role_name():
 
     with pytest.raises(ValidationError):
-        UserService.create_user_with_roles(
+        UserService.create_user_with_role(
             email=fake.email(),
             password=fake.password(),
-            role_names=[],
+            role_name="",
         )
 
 
 @pytest.mark.django_db
-def test_create_user_with_roles_role_not_exists(setup_system_roles):
+def test_create_user_with_role_not_exists():
 
     with pytest.raises(ValidationError):
-        UserService.create_user_with_roles(
+        UserService.create_user_with_role(
             email=fake.email(),
             password=fake.password(),
-            role_names=["not_existing_role", DefaultSystemRole.CLIENT],
+            role_name="not_existing_role",
+        )
+
+    with pytest.raises(ValidationError):
+        UserService.create_user_with_role(
+            email=fake.email(),
+            password=fake.password(),
+            role_name=DefaultSystemRole.CLIENT,
         )
 
 
 @pytest.mark.django_db
-def test_create_user_with_roles_simple_password():
+def test_create_user_with_role_simple_password():
 
     with pytest.raises(ValidationError):
-        UserService.create_user_with_roles(
+        UserService.create_user_with_role(
             email=fake.email(),
             password="123456",
-            role_names=[DefaultSystemRole.CLIENT],
+            role_name=DefaultSystemRole.CLIENT,
         )
 
 
 @pytest.mark.django_db
-def test_create_user_with_roles_invalid_email():
+def test_create_user_with_role_invalid_email():
 
     with pytest.raises(ValidationError):
-        UserService.create_user_with_roles(
+        UserService.create_user_with_role(
             email="invalid.email.com",
             password=fake.password(),
-            role_names=[DefaultSystemRole.CLIENT],
+            role_name=DefaultSystemRole.CLIENT,
         )
 
 
 @pytest.mark.django_db
 def test_create_user_with_roles(setup_system_roles):
 
-    role_names = [DefaultSystemRole.CLIENT, DefaultSystemRole.ADMIN]
-
-    user = UserService.create_user_with_roles(
+    user = UserService.create_user_with_role(
         email=fake.email(),
         password=fake.password(),
-        role_names=role_names,
+        role_name=DefaultSystemRole.CLIENT,
     )
 
-    assert set(user.roles.all()) == set(Role.objects.filter(name__in=role_names).all())
+    assert user.role == Role.objects.get(name=DefaultSystemRole.CLIENT)
     assert set(user.groups.all()) == set(
-        Group.objects.filter(name__in=role_names).all()
+        Group.objects.filter(name__in=[DefaultSystemRole.CLIENT]).all()
     )
 
 
@@ -74,15 +79,15 @@ def test_create_user_with_roles(setup_system_roles):
 def test_create_user_with_roles_email_already_exists(setup_system_roles):
     email = fake.email()
 
-    UserService.create_user_with_roles(
+    UserService.create_user_with_role(
         email=email,
         password=fake.password(),
-        role_names=[DefaultSystemRole.CLIENT],
+        role_name=DefaultSystemRole.CLIENT,
     )
 
     with pytest.raises(ValidationError):
-        UserService.create_user_with_roles(
+        UserService.create_user_with_role(
             email=email,
             password=fake.password(),
-            role_names=[DefaultSystemRole.CLIENT],
+            role_name=DefaultSystemRole.CLIENT,
         )

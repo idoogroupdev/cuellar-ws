@@ -25,59 +25,47 @@ class UserService:
             raise ValidationError({"email": exc.message}) from exc
 
     @staticmethod
-    def validate_role_names(role_names: list[str | DefaultSystemRole]):
-        """Validate role names and return a list of roles"""
+    def validate_role_name(role_name: str | DefaultSystemRole):
+        """Validate role name and return a role"""
 
-        if not role_names:
-            raise ValidationError({"role_names": _("At least one role is required")})
+        if not role_name:
+            raise ValidationError({"role_name": _("Role name is required")})
 
-        normalized_role_names = [
-            role.value if isinstance(role, DefaultSystemRole) else role
-            for role in role_names
-        ]
-        unique_role_names = list(set(normalized_role_names))
+        role = Role.objects.filter(name=role_name).first()
 
-        roles = list(Role.objects.filter(name__in=unique_role_names))
-
-        found_role_names = {role.name for role in roles}
-        missing_roles = list(set(unique_role_names) - found_role_names)
-
-        if missing_roles:
+        if not role:
             raise ValidationError(
-                {
-                    "role_names": _("Roles not found: %(roles)s")
-                    % {"roles": ", ".join(missing_roles)}
-                }
+                {"role_name": _("Role not found: %(role)s") % {"role": role_name}}
             )
 
-        return roles
+        return role
 
     @staticmethod
     @transaction.atomic
-    def create_user_with_roles(
+    def create_user_with_role(
         *,
         email: str,
         password: str,
-        role_names: list[str | DefaultSystemRole],
+        role_name: str | DefaultSystemRole,
         **extra_fields,
     ) -> User:
 
         UserService.validate_password(password)
         UserService.validate_email(email)
-        roles = UserService.validate_role_names(role_names)
+        role = UserService.validate_role_name(role_name)
 
         username = generate_unique_username(email)
 
         user = User(
             username=username,
             email=email,
+            role=role,
             **extra_fields,
         )
         user.set_password(password)
         user.full_clean()
         user.save()
 
-        user.roles.set(roles)
-        user.groups.set([role.group for role in roles])
+        user.groups.set([role.group])
 
         return user

@@ -13,6 +13,12 @@ mutation registerClient($input: RegisterUserInput!) {
       lastName
       username
       isVerified
+      permissions {
+       codename
+      }
+      role {
+        name
+      }
     }
   }
 }
@@ -65,4 +71,6 @@ def test_register_client(client_query, setup_system_roles):
         "lastName": "",
         "username": result["data"]["registerClient"]["user"]["username"],
         "isVerified": False,
+        "permissions": [],
+        "role": {"name": "CLIENT"},
     }

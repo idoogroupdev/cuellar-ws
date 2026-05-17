@@ -21,10 +21,10 @@ class RegisterClient(graphene.Mutation):
 
     def mutate(self, info, input: RegisterUserInput):
         try:
-            user = UserService.create_user_with_roles(
+            user = UserService.create_user_with_role(
                 email=input.email.lower(),
                 password=input.password,
-                role_names=[DefaultSystemRole.CLIENT],
+                role_name=DefaultSystemRole.CLIENT,
             )
         except ValidationError as exc:
             raise ValidationGraphQLError(fields=exc.message_dict)

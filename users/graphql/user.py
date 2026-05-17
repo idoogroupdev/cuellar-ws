@@ -1,14 +1,13 @@
 import graphene
 from graphene_django import DjangoObjectType
 
-from roles.graphql.roles import PermissionNode, RoleNode
+from roles.graphql.roles import PermissionNode
 from users.models import User
 from utils.decorators import login_required
 
 
 class UserNode(DjangoObjectType):
     id = graphene.ID(source="pk", required=True)
-    roles = graphene.List(RoleNode)
     permissions = graphene.List(PermissionNode)
 
     class Meta:
@@ -23,10 +22,8 @@ class UserNode(DjangoObjectType):
             "is_active",
             "is_superuser",
             "is_verified",
+            "role",
         )
-
-    def resolve_roles(self, info):
-        return self.roles.all()
 
     def resolve_permissions(self, info):
         return self.user_permissions.all()
