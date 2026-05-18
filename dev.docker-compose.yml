@@ -15,6 +15,9 @@ services:
       - ./.env
     depends_on:
       - backend
+    networks:
+      - dokploy-network
+      - default
 
   celery-beat:
     build: .
@@ -24,3 +27,6 @@ services:
       - ./.env
     depends_on:
       - backend
+    networks:
+      - dokploy-network
+      - default
