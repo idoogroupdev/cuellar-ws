@@ -32,7 +32,7 @@ DEFAULT_FIELD_FACTORIES = {
     models.CharField: lambda f: fake.pystr(max_chars=f.max_length),
     models.IntegerField: lambda f: fake.random_int(),
     models.FloatField: lambda f: fake.pyfloat(),
-    models.BooleanField: lambda f: fake.boolean(),
+    models.BooleanField: lambda f: f.get_default(),
     models.DateField: lambda f: timezone.now().date(),
     models.DateTimeField: lambda f: timezone.now(),
     models.UUIDField: lambda f: fake.uuid4(),
