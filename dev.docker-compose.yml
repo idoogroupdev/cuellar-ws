@@ -1,0 +1,26 @@
+services:
+  backend:
+    build: .
+    expose:
+      - 80
+    env_file:
+      - ./.env
+    restart: always
+
+  celery:
+    build: .
+    restart: always
+    command: ["celery", "-A", "core", "worker", "--loglevel=ERROR"]
+    env_file:
+      - ./.env
+    depends_on:
+      - backend
+
+  celery-beat:
+    build: .
+    restart: always
+    command: ["celery", "-A", "core", "beat", "--loglevel=ERROR"]
+    env_file:
+      - ./.env
+    depends_on:
+      - backend
