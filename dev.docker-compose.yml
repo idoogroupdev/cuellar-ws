@@ -1,11 +1,12 @@
 services:
   backend:
     build: .
-    expose:
-      - 80
+    restart: always
+    command: ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:80"]
     env_file:
       - ./.env
-    restart: always
+    expose:
+      - 80
 
   celery:
     build: .
