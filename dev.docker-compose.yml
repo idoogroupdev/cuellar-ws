@@ -10,7 +10,7 @@ services:
   celery:
     build: .
     restart: always
-    command: ["celery", "-A", "core", "worker", "--loglevel=ERROR"]
+    command: ["celery", "-A", "config", "worker", "--loglevel=ERROR"]
     env_file:
       - ./.env
     depends_on:
@@ -22,7 +22,7 @@ services:
   celery-beat:
     build: .
     restart: always
-    command: ["celery", "-A", "core", "beat", "--loglevel=ERROR"]
+    command: ["celery", "-A", "config", "beat", "--loglevel=ERROR"]
     env_file:
       - ./.env
     depends_on:
