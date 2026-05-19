@@ -43,16 +43,16 @@ class AccountVerification(models.Model):
 
     def mark_as_verified(self):
         self.user.is_verified = True
-        self.user.save()
+        self.user.save(update_fields=["is_verified"])
 
         self.verified_at = timezone.now()
         self.code = None
-        self.save()
+        self.save(update_fields=["verified_at", "code"])
 
     def generate_code(self):
         self.code = generate_unique_code(self.__class__)
         self.expires_at = default_code_expiration()
-        self.save()
+        self.save(update_fields=["code", "expires_at"])
 
     def is_valid_code(self, code: str):
-        return self.code == code and not self.is_expired()
+        return self.code == code

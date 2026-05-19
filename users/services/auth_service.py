@@ -19,7 +19,7 @@ class AuthCodeEnum(str, Enum):
 
 
 @dataclass
-class AuthResult:
+class AuthInfo:
     token: str
     refresh_token: str
     payload: dict
@@ -37,7 +37,7 @@ class AuthService:
             refresh_token.created + jwt_settings.JWT_REFRESH_EXPIRATION_DELTA
         )
 
-        return AuthResult(
+        return AuthInfo(
             token=token,
             refresh_token=refresh_token.token,
             payload=jwt_decode(token),
@@ -77,3 +77,32 @@ class AuthService:
         if auth_code.value == AuthCodeEnum.PASSWORD_RECOVERY.value:
             # TODO: send email
             pass
+
+    @staticmethod
+    def verify_auth_code(email: str, code: str, auth_code: AuthCodeEnum):
+        validate_email(email)
+
+        if auth_code.value == AuthCodeEnum.REGISTRATION.value:
+            verification = (
+                AccountVerification.objects.select_related("user")
+                .filter(user__email=email)
+                .first()
+            )
+
+            if not verification:
+                raise ValueError(_("Invalid auth code"))
+
+            if verification.is_expired():
+                raise ValueError(_("Auth code expired"))
+
+            if verification.is_verified():
+                raise ValueError(_("User is already verified"))
+
+            if not verification.is_valid_code(code):
+                raise ValueError(_("Invalid auth code"))
+
+            verification.mark_as_verified()
+
+            auth_info = AuthService.create_jwt_and_refresh_info(verification.user)
+
+            return verification.user, auth_info
