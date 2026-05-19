@@ -34,7 +34,7 @@ DEFAULT_FIELD_FACTORIES = {
     models.FloatField: lambda f: fake.pyfloat(),
     models.BooleanField: lambda f: f.get_default(),
     models.DateField: lambda f: timezone.now().date(),
-    models.DateTimeField: lambda f: timezone.now(),
+    models.DateTimeField: lambda f: f.get_default(),
     models.UUIDField: lambda f: fake.uuid4(),
     gis_models.PointField: lambda f: Point(
         int(fake.longitude()), int(fake.latitude()), srid=f.srid or 4326
