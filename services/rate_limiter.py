@@ -11,12 +11,12 @@ class RateLimitResult:
 
 
 class RateLimiter:
-    cache_format = "rl:%(scope)s:%(key)s"
+    _cache_format = "rl:%(scope)s:%(key)s"
 
     @staticmethod
     def hit(scope: str, key: str, expiration: int) -> RateLimitResult:
 
-        cache_key = RateLimiter.cache_format % {"scope": scope, "key": key}
+        cache_key = RateLimiter._cache_format % {"scope": scope, "key": key}
 
         is_blocked = cache.get(cache_key)
 
