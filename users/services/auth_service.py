@@ -28,12 +28,12 @@ class AuthService:
         if user.is_verified:
             raise ValueError(_("User is already verified"))
 
-        if auth_code.value == AuthCodeEnum.REGISTRATION:
+        if auth_code.value == AuthCodeEnum.REGISTRATION.value:
             verification = AccountVerification.objects.get_or_create(user=user)[0]
             verification.generate_code()
 
             MailService.send_registration_code(email, verification.code)
 
-        if auth_code.value == AuthCodeEnum.PASSWORD_RECOVERY:
+        if auth_code.value == AuthCodeEnum.PASSWORD_RECOVERY.value:
             # TODO: send email
             pass
