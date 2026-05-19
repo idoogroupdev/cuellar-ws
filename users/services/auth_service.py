@@ -3,7 +3,9 @@ from enum import Enum
 from django.utils.translation import gettext_lazy as _
 
 from services.mail_service import MailService
+from services.rate_limiter import RateLimiter
 from users.models import AccountVerification, User
+from utils.exceptions import TooManyAttempts
 from utils.validators import validate_email
 
 
@@ -13,6 +15,8 @@ class AuthCodeEnum(str, Enum):
 
 
 class AuthService:
+    BLOCK_TIME = 60
+
     @staticmethod
     def send_auth_code(email: str, auth_code: AuthCodeEnum):
         validate_email(email)
@@ -29,6 +33,15 @@ class AuthService:
             raise ValueError(_("User is already verified"))
 
         if auth_code.value == AuthCodeEnum.REGISTRATION.value:
+            result = RateLimiter.hit(
+                scope="req_auth_code_regis",
+                key=email,
+                expiration=AuthService.BLOCK_TIME,
+            )
+
+            if result.allowed is False:
+                raise TooManyAttempts(seconds=result.remaining)
+
             verification = AccountVerification.objects.get_or_create(user=user)[0]
             verification.generate_code()
 
