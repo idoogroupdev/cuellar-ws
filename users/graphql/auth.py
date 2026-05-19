@@ -2,6 +2,7 @@ import graphene
 import graphql_jwt
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
+from graphene.types.generic import GenericScalar
 
 from roles.models import DefaultSystemRole
 from users.graphql.user import UserNode
@@ -61,11 +62,49 @@ class RequestAuthCode(graphene.Mutation):
         input = RequestAuthCodeInput(required=True)
 
     def mutate(self, info, input: RequestAuthCodeInput):
-        AuthService.send_auth_code(
-            email=input.email.lower(),
-            auth_code=input.auth_code,
-        )
+        try:
+            AuthService.send_auth_code(
+                email=input.email.lower(),
+                auth_code=input.auth_code,
+            )
+        except ValidationError as exc:
+            raise ValidationGraphQLError(fields=exc.message_dict)
+
         return RequestAuthCode(message=_("Code sent"))
+
+
+class VerifyAuthCodeInput(RequestAuthCodeInput):
+    code = graphene.String(required=True)
+
+
+class VerifyAuthCode(graphene.Mutation):
+    user = graphene.Field(UserNode)
+    token = graphene.String()
+    refresh_token = graphene.String()
+    payload = GenericScalar()
+    refresh_expires_in = graphene.Int()
+
+    class Arguments:
+        input = VerifyAuthCodeInput(required=True)
+
+    def mutate(self, info, input: VerifyAuthCodeInput):
+        try:
+            user, auth_info = AuthService.verify_auth_code(
+                email=input.email.lower(),
+                code=input.code,
+                auth_code=input.auth_code,
+            )
+
+        except ValidationError as exc:
+            raise ValidationGraphQLError(fields=exc.message_dict)
+
+        return VerifyAuthCode(
+            user=user,
+            token=auth_info.token,
+            refresh_token=auth_info.refresh_token,
+            payload=auth_info.payload,
+            refresh_expires_in=int(auth_info.refresh_expires_in.timestamp()),
+        )
 
 
 class Mutation(graphene.ObjectType):
@@ -75,6 +114,7 @@ class Mutation(graphene.ObjectType):
     revoke_token = graphql_jwt.Revoke.Field()
     register_client = RegisterClient.Field()
     request_auth_code = RequestAuthCode.Field()
+    verify_auth_code = VerifyAuthCode.Field()
 
 
 schema = graphene.Schema(mutation=Mutation)

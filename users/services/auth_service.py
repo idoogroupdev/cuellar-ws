@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
 
 from django.utils.translation import gettext_lazy as _
@@ -23,7 +24,7 @@ class AuthInfo:
     token: str
     refresh_token: str
     payload: dict
-    refresh_expires_in: int
+    refresh_expires_in: datetime
 
 
 class AuthService:
