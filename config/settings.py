@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "roles",
     "users",
     "graphene_django",
+    "graphql_jwt.refresh_token.apps.RefreshTokenConfig",
 ]
 
 

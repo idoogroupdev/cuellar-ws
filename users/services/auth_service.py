@@ -1,6 +1,10 @@
+from dataclasses import dataclass
 from enum import Enum
 
 from django.utils.translation import gettext_lazy as _
+from graphql_jwt.settings import jwt_settings
+from graphql_jwt.shortcuts import create_refresh_token, get_token
+from graphql_jwt.utils import jwt_decode
 
 from services.mail_service import MailService
 from services.rate_limiter import RateLimiter
@@ -14,8 +18,31 @@ class AuthCodeEnum(str, Enum):
     PASSWORD_RECOVERY = "PASSWORD_RECOVERY"  # nosec
 
 
+@dataclass
+class AuthResult:
+    token: str
+    refresh_token: str
+    payload: dict
+    refresh_expires_in: int
+
+
 class AuthService:
     BLOCK_TIME = 60
+
+    @staticmethod
+    def create_jwt_and_refresh_info(user: User):
+        token = get_token(user)
+        refresh_token = create_refresh_token(user)
+        refresh_expires_in = (
+            refresh_token.created + jwt_settings.JWT_REFRESH_EXPIRATION_DELTA
+        )
+
+        return AuthResult(
+            token=token,
+            refresh_token=refresh_token.token,
+            payload=jwt_decode(token),
+            refresh_expires_in=refresh_expires_in,
+        )
 
     @staticmethod
     def send_auth_code(email: str, auth_code: AuthCodeEnum):
