@@ -1,5 +1,4 @@
 from pathlib import Path
-from urllib.parse import urlencode
 
 from decouple import Csv, config
 
@@ -148,16 +147,7 @@ SUPERUSER_EMAIL = config("SUPERUSER_EMAIL", default="superuser@example.com")
 SUPERUSER_PASSWORD = config("SUPERUSER_PASSWORD", default="superuser")
 
 # Cache
-REDIS_HOST = config("REDIS_HOST", default="127.0.0.1")
-REDIS_PORT = config("REDIS_PORT", default=6379, cast=int)
-REDIS_USER = config("REDIS_USER", default="")
-REDIS_PASSWORD = config("REDIS_PASSWORD", default="")
-REDIS_USE_TLS = config("REDIS_USE_TLS", default=False, cast=bool)
-
-SCHEME = "rediss" if REDIS_USE_TLS else "redis"
-SSL_CERT_REQS = urlencode({"ssl_cert_reqs": "none"}) if REDIS_USE_TLS else ""
-
-REDIS_URL = f"{SCHEME}://{REDIS_USER}:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/0?{SSL_CERT_REQS}"
+REDIS_URL = config("REDIS_URL", default="redis://127.0.0.1:6379/0")
 
 CACHES = {
     "default": {
