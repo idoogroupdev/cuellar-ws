@@ -8,6 +8,7 @@ from django.utils.timezone import now
 class RateLimitResult:
     allowed: bool
     remaining: int
+    """Seconds"""
 
 
 class RateLimiter:
