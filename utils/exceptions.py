@@ -52,3 +52,15 @@ class ValidationGraphQLError(GraphQLError):
                 "fields": fields,
             },
         )
+
+
+class TooManyAttempts(GraphQLError):
+    message = _("Too many attempts. Try again in %(count)s seconds.")
+
+    def __init__(self, seconds: int, message=None):
+        _message = message or self.message
+
+        super().__init__(
+            _message % {"count": seconds},
+            extensions={"code": "TOO_MANY_ATTEMPTS", "seconds": seconds},
+        )
