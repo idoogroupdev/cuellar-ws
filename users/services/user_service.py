@@ -9,11 +9,6 @@ from utils.validators import validate_email, validate_password
 
 
 class UserService:
-    _slots_ = [
-        "validate_role_name",
-        "create_user_with_role",
-    ]
-
     @staticmethod
     def validate_role_name(role_name: str | DefaultSystemRole):
         """Validate role name and return a role"""
