@@ -115,6 +115,33 @@ class AuthService:
 
             verification.mark_as_verified()
 
-            auth_info = AuthService.create_jwt_and_refresh_info(verification.user)
+            user = verification.user
 
-            return verification.user, auth_info
+        if auth_code.value == AuthCodeEnum.PASSWORD_RECOVERY.value:
+            recover_password = (
+                RecoverPassword.objects.select_related("user")
+                .filter(user__email=email)
+                .first()
+            )
+
+            if not recover_password:
+                raise ValueError(_("Invalid auth code"))
+
+            if recover_password.is_expired():
+                raise ValueError(_("Auth code expired"))
+
+            if not recover_password.is_valid_code(code):
+                raise ValueError(_("Invalid auth code"))
+
+            user = recover_password.user
+            user.state = User.StateChoices.WAITING_FOR_NEW_PASSWD
+            user.save(update_fields=["state"])
+
+            verification = AccountVerification.objects.get_or_create(user=user)[0]
+            verification.mark_as_verified()
+
+            recover_password.delete()
+
+        auth_info = AuthService.create_jwt_and_refresh_info(user)
+
+        return verification.user, auth_info
