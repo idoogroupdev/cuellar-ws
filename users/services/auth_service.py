@@ -95,53 +95,63 @@ class AuthService:
         validate_email(email)
 
         if auth_code.value == AuthCodeEnum.REGISTRATION.value:
-            verification = (
-                AccountVerification.objects.select_related("user")
-                .filter(user__email=email)
-                .first()
-            )
-
-            if not verification:
-                raise ValueError(_("Invalid auth code"))
-
-            if verification.is_expired():
-                raise ValueError(_("Auth code expired"))
-
-            if verification.is_verified():
-                raise ValueError(_("User is already verified"))
-
-            if not verification.is_valid_code(code):
-                raise ValueError(_("Invalid auth code"))
-
-            verification.mark_as_verified()
-
-            user = verification.user
+            user = AuthService._verify_registration_code(email, code)
 
         if auth_code.value == AuthCodeEnum.PASSWORD_RECOVERY.value:
-            recover_password = (
-                RecoverPassword.objects.select_related("user")
-                .filter(user__email=email)
-                .first()
-            )
-
-            if not recover_password:
-                raise ValueError(_("Invalid auth code"))
-
-            if recover_password.is_expired():
-                raise ValueError(_("Auth code expired"))
-
-            if not recover_password.is_valid_code(code):
-                raise ValueError(_("Invalid auth code"))
-
-            user = recover_password.user
-            user.state = User.StateChoices.WAITING_FOR_NEW_PASSWD
-            user.save(update_fields=["state"])
-
-            verification = AccountVerification.objects.get_or_create(user=user)[0]
-            verification.mark_as_verified()
-
-            recover_password.delete()
+            user = AuthService._verify_passwd_recovery_code(email, code)
 
         auth_info = AuthService.create_jwt_and_refresh_info(user)
 
-        return verification.user, auth_info
+        return user, auth_info
+
+    @staticmethod
+    def _verify_registration_code(email: str, code: str):
+        verification = (
+            AccountVerification.objects.select_related("user")
+            .filter(user__email=email)
+            .first()
+        )
+
+        if not verification:
+            raise ValueError(_("Invalid auth code"))
+
+        if verification.is_expired():
+            raise ValueError(_("Auth code expired"))
+
+        if verification.is_verified():
+            raise ValueError(_("User is already verified"))
+
+        if not verification.is_valid_code(code):
+            raise ValueError(_("Invalid auth code"))
+
+        verification.mark_as_verified()
+
+        return verification.user
+
+    @staticmethod
+    def _verify_passwd_recovery_code(email: str, code: str):
+        recover_password = (
+            RecoverPassword.objects.select_related("user")
+            .filter(user__email=email)
+            .first()
+        )
+
+        if not recover_password:
+            raise ValueError(_("Invalid auth code"))
+
+        if recover_password.is_expired():
+            raise ValueError(_("Auth code expired"))
+
+        if not recover_password.is_valid_code(code):
+            raise ValueError(_("Invalid auth code"))
+
+        user = recover_password.user
+        user.state = User.StateChoices.WAITING_FOR_NEW_PASSWD
+        user.save(update_fields=["state"])
+
+        verification = AccountVerification.objects.get_or_create(user=user)[0]
+        verification.mark_as_verified()
+
+        recover_password.delete()
+
+        return user
