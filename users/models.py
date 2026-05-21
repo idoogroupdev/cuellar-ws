@@ -20,7 +20,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ["username"]
 
 
-def default_code_expiration():
+def default_expiration_date():
     return timezone.now() + timedelta(minutes=10)
 
 
@@ -30,7 +30,7 @@ class AccountVerification(models.Model):
     )
     code = models.CharField(max_length=6, null=True, blank=True, db_index=True)
     expires_at = models.DateTimeField(
-        default=default_code_expiration, null=True, blank=True
+        default=default_expiration_date, null=True, blank=True
     )
     verified_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -51,8 +51,28 @@ class AccountVerification(models.Model):
 
     def generate_code(self):
         self.code = generate_unique_code(self.__class__)
-        self.expires_at = default_code_expiration()
+        self.expires_at = default_expiration_date()
         self.save(update_fields=["code", "expires_at"])
 
     def is_valid_code(self, code: str):
+        return self.code == code
+
+
+class RecoverPassword(models.Model):
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="recover_password"
+    )
+    code = models.CharField(max_length=6, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(default=default_expiration_date)
+
+    def generate_code(self):
+        self.code = generate_unique_code(self.__class__)
+        self.expires_at = default_expiration_date()
+        self.save(update_fields=["code", "expires_at"])
+
+    def is_expired(self):
+        return self.expires_at is not None and self.expires_at < timezone.now()
+
+    def is_valid(self, code: str):
         return self.code == code
