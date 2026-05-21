@@ -10,11 +10,25 @@ from utils.functions.generate_unique_code import generate_unique_code
 
 
 class User(AbstractUser):
+    class StateChoices(models.TextChoices):
+        NONE = "NONE", _("None")
+        WAITING_FOR_NEW_PASSWD = (
+            "WAITING_FOR_NEW_PASSWD",
+            _("Waiting for new password"),
+        )
+
     email = models.EmailField(_("email address"), unique=True)
     role = models.ForeignKey(
         Role, on_delete=models.SET_NULL, related_name="users", null=True, blank=True
     )
     is_verified = models.BooleanField(default=False)
+    state = models.CharField(
+        max_length=22,
+        choices=StateChoices.choices,
+        default=StateChoices.NONE,
+        null=True,
+        blank=True,
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
@@ -74,5 +88,5 @@ class RecoverPassword(models.Model):
     def is_expired(self):
         return self.expires_at is not None and self.expires_at < timezone.now()
 
-    def is_valid(self, code: str):
+    def is_valid_code(self, code: str):
         return self.code == code
