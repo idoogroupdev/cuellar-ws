@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 
 from decouple import Csv, config
@@ -128,6 +129,14 @@ GRAPHENE = {
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
     ],
+}
+
+GRAPHQL_JWT = {
+    "JWT_VERIFY_EXPIRATION": True,
+    "JWT_LONG_RUNNING_REFRESH_TOKEN": True,  # nosec
+    "JWT_REFRESH_EXPIRED_HANDLER": lambda orig_iat, context: False,
+    "JWT_EXPIRATION_DELTA": timedelta(hours=24),
+    "JWT_REFRESH_EXPIRATION_DELTA": timedelta(days=7),
 }
 
 
