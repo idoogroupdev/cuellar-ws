@@ -12,7 +12,7 @@ from services.mail_service import MailService
 from services.rate_limiter import RateLimiter
 from users.models import AccountVerification, RecoverPassword, User
 from utils.exceptions import TooManyAttempts
-from utils.validators import validate_email
+from utils.validators import validate_email, validate_password
 
 
 class AuthCodeEnum(str, Enum):
@@ -177,5 +177,24 @@ class AuthService:
         verification.mark_as_verified()
 
         recover_password.delete()
+
+        return user
+
+    @staticmethod
+    def reset_password_after_recovery(email: str, new_password: str):
+        validate_email(email)
+        validate_password(new_password)
+
+        user = User.objects.filter(email=email).first()
+
+        if not user:
+            raise ValueError(_("Invalid password recovery flow"))
+
+        if user.state != User.StateChoices.WAITING_FOR_NEW_PASSWD:
+            raise ValueError(_("User is not allowed to reset password"))
+
+        user.set_password(new_password)
+        user.state = User.StateChoices.NONE
+        user.save(update_fields=["password", "state"])
 
         return user
