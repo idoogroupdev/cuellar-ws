@@ -43,6 +43,9 @@ class RateLimiter(RateLimiterConfig):
         request: HttpRequest,
     ):
 
+        if not request:
+            return RateLimitResult(allowed=True, remaining=0)
+
         ip_address, _ = get_client_ip(request)
 
         cache_key = RateLimiterConfig._cache_format % {
@@ -67,6 +70,10 @@ class RateLimiter(RateLimiterConfig):
         base_block_time: int = RateLimiterConfig.BASE_BLOCK_TIME,
         max_block_time: int = RateLimiterConfig.MAX_BLOCK_TIME,
     ):
+
+        if not request:
+            return
+
         ip_address, _ = get_client_ip(request)
 
         cache_key = RateLimiterConfig._cache_format % {
@@ -98,6 +105,10 @@ class RateLimiter(RateLimiterConfig):
         scope: str,
         request: HttpRequest,
     ):
+
+        if not request:
+            return
+
         ip_address, _ = get_client_ip(request)
 
         cache_key = RateLimiterConfig._cache_format % {
