@@ -88,11 +88,13 @@ class VerifyAuthCode(graphene.Mutation):
         input = VerifyAuthCodeInput(required=True)
 
     def mutate(self, info, input: VerifyAuthCodeInput):
+
         try:
             user, auth_info = AuthService.verify_auth_code(
                 email=input.email.lower(),
                 code=input.code,
                 auth_code=input.auth_code,
+                request=info.context,
             )
 
         except ValidationError as exc:

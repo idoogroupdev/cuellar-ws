@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 
+from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from graphql_jwt.settings import jwt_settings
 from graphql_jwt.shortcuts import create_refresh_token, get_token
@@ -29,6 +30,10 @@ class AuthInfo:
 
 class AuthService:
     BLOCK_TIME = 60
+    SCOPES = {
+        "registration_code": "verify_registration_code",
+        "passwd_code": "verify_passwd_code",  # nosec
+    }
 
     @staticmethod
     def create_jwt_and_refresh_info(user: User):
@@ -91,16 +96,35 @@ class AuthService:
             MailService.send_password_recovery_code(email, code=recover_password.code)
 
     @staticmethod
-    def verify_auth_code(email: str, code: str, auth_code: AuthCodeEnum):
+    def verify_auth_code(
+        email: str, code: str, auth_code: AuthCodeEnum, request: HttpRequest = None
+    ):
         validate_email(email)
 
         if auth_code.value == AuthCodeEnum.REGISTRATION.value:
-            user = AuthService._verify_registration_code(email, code)
+            scope = AuthService.SCOPES["registration_code"]
+            function = AuthService._verify_registration_code
 
-        if auth_code.value == AuthCodeEnum.PASSWORD_RECOVERY.value:
-            user = AuthService._verify_passwd_recovery_code(email, code)
+        elif auth_code.value == AuthCodeEnum.PASSWORD_RECOVERY.value:
+            scope = AuthService.SCOPES["passwd_code"]
+            function = AuthService._verify_passwd_recovery_code
+
+        else:
+            raise ValueError(_("Invalid auth code"))
+
+        result = RateLimiter.check(scope=scope, request=request)
+
+        if result.allowed is False:
+            raise TooManyAttempts(seconds=result.remaining)
+
+        try:
+            user = function(email, code)
+        except ValueError:
+            RateLimiter.register_failure(scope=scope, request=request)
+            raise
 
         auth_info = AuthService.create_jwt_and_refresh_info(user)
+        RateLimiter.reset(scope=scope, request=request)
 
         return user, auth_info
 
