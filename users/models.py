@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 from roles.models import Role
 from utils.functions.generate_unique_code import generate_unique_code
@@ -28,6 +29,9 @@ class User(AbstractUser):
         default=StateChoices.NONE,
         null=True,
         blank=True,
+    )
+    phone = PhoneNumberField(
+        verbose_name=_("phone"), blank=True, null=True, unique=True
     )
 
     USERNAME_FIELD = "email"

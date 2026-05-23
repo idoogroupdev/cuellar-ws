@@ -19,6 +19,8 @@ class AuthCodeEnum(graphene.Enum):
 class RegisterUserInput(graphene.InputObjectType):
     email = graphene.String(required=True)
     password = graphene.String(required=True)
+    first_name = graphene.String(required=True)
+    phone = graphene.String(required=True)
 
 
 class RegisterClient(graphene.Mutation):
@@ -33,6 +35,8 @@ class RegisterClient(graphene.Mutation):
                 email=input.email.lower(),
                 password=input.password,
                 role_name=DefaultSystemRole.CLIENT,
+                first_name=input.first_name,
+                phone=input.phone,
             )
         except ValidationError as exc:
             raise ValidationGraphQLError(fields=exc.message_dict)

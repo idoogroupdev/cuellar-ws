@@ -19,6 +19,7 @@ mutation registerClient($input: RegisterUserInput!) {
       role {
         name
       }
+      phone
     }
   }
 }
@@ -28,7 +29,15 @@ mutation registerClient($input: RegisterUserInput!) {
 @pytest.mark.django_db
 def test_register_client_simple_password(client_query):
     result = client_query(
-        query, variables={"input": {"email": "test@test.com", "password": "123456"}}
+        query,
+        variables={
+            "input": {
+                "email": "test@test.com",
+                "password": "123456",
+                "phone": "+5356734300",
+                "firstName": "test",
+            }
+        },
     ).json()
 
     assert result["errors"][0]["extensions"] == {
@@ -45,7 +54,14 @@ def test_register_client_simple_password(client_query):
 def test_register_client_invalid_email(client_query):
     result = client_query(
         query,
-        variables={"input": {"email": "testtest.com", "password": "123456Dfddfe"}},
+        variables={
+            "input": {
+                "email": "testtest.com",
+                "password": "123456Dfddfe",
+                "phone": "+5356734300",
+                "firstName": "test",
+            }
+        },
     ).json()
 
     assert result["errors"][0]["extensions"] == {
@@ -58,12 +74,19 @@ def test_register_client_invalid_email(client_query):
 def test_register_client(client_query, setup_system_roles):
     result = client_query(
         query,
-        variables={"input": {"email": "test@test.com", "password": "123456Dfddfe"}},
+        variables={
+            "input": {
+                "email": "test@test.com",
+                "password": "123456Dfddfe",
+                "phone": "+5356734300",
+                "firstName": "test",
+            }
+        },
     ).json()
 
     assert result["data"]["registerClient"]["user"] == {
         "email": "test@test.com",
-        "firstName": "",
+        "firstName": "test",
         "id": result["data"]["registerClient"]["user"]["id"],
         "isActive": True,
         "isStaff": False,
@@ -73,4 +96,5 @@ def test_register_client(client_query, setup_system_roles):
         "isVerified": False,
         "permissions": [],
         "role": {"name": "CLIENT"},
+        "phone": "+5356734300",
     }

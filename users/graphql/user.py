@@ -23,6 +23,7 @@ class UserNode(DjangoObjectType):
             "is_superuser",
             "is_verified",
             "role",
+            "phone",
         )
 
     def resolve_permissions(self, info):
