@@ -8,6 +8,7 @@ from roles.models import DefaultSystemRole
 from users.graphql.user import UserNode
 from users.services.auth_service import AuthService
 from users.services.user_service import UserService
+from utils.decorators import login_required
 from utils.exceptions import UserNotVerified, ValidationGraphQLError
 
 
@@ -113,6 +114,28 @@ class VerifyAuthCode(graphene.Mutation):
         )
 
 
+class ResetPasswordInput(graphene.InputObjectType):
+    new_password = graphene.String(required=True)
+
+
+class ResetPassword(graphene.Mutation):
+    user = graphene.Field(UserNode)
+
+    class Arguments:
+        input = ResetPasswordInput(required=True)
+
+    @login_required
+    def mutate(self, info, input: ResetPasswordInput):
+        try:
+            user = AuthService.reset_password_after_recovery(
+                email=info.context.user.email, new_password=input.new_password
+            )
+        except ValidationError as exc:
+            raise ValidationGraphQLError(fields=exc.message_dict)
+
+        return ResetPassword(user=user)
+
+
 class Mutation(graphene.ObjectType):
     login = Login.Field()
     verify_token = graphql_jwt.Verify.Field()
@@ -121,6 +144,7 @@ class Mutation(graphene.ObjectType):
     register_client = RegisterClient.Field()
     request_auth_code = RequestAuthCode.Field()
     verify_auth_code = VerifyAuthCode.Field()
+    reset_password = ResetPassword.Field()
 
 
 schema = graphene.Schema(mutation=Mutation)
