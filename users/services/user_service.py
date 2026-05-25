@@ -90,7 +90,7 @@ class UserService:
 
         if update_fields:
             user.full_clean()
-            user.save(update_fields=list(dict.fromkeys(update_fields)))
+            user.save(update_fields=update_fields)
 
         if role_updated:
             user.groups.set([user.role.group])
