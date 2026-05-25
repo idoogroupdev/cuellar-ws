@@ -14,3 +14,4 @@ django-cors-headers==4.9.0
 django-ipware==7.0.1
 django-phonenumber-field[phonenumbers]==8.4.0
 graphene-file-upload==1.3.0
+Pillow==12.2.0
