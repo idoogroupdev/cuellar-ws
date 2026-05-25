@@ -54,3 +54,45 @@ class UserService:
         user.groups.set([role.group])
 
         return user
+
+    @staticmethod
+    @transaction.atomic
+    def update_user(
+        user: User,
+        *,
+        role_name: str | DefaultSystemRole | None = None,
+        password: str | None = None,
+        **extra_fields,
+    ) -> User:
+        update_fields: list[str] = []
+        role_updated = False
+
+        if role_name is not None:
+            role = UserService.validate_role_name(role_name)
+            if user.role_id != role.id:
+                user.role = role
+                update_fields.append("role")
+                role_updated = True
+
+        email = extra_fields.get("email")
+        if email is not None:
+            validate_email(email)
+
+        if password:
+            validate_password(password)
+            user.set_password(password)
+            update_fields.append("password")
+
+        for field, value in extra_fields.items():
+            if getattr(user, field) != value:
+                setattr(user, field, value)
+                update_fields.append(field)
+
+        if update_fields:
+            user.full_clean()
+            user.save(update_fields=list(dict.fromkeys(update_fields)))
+
+        if role_updated:
+            user.groups.set([user.role.group])
+
+        return user
