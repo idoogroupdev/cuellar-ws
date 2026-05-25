@@ -90,3 +90,14 @@ def test_update_user_password_and_extra_fields(setup_system_roles):
 
     assert updated_user.check_password("N3wStr0ngPass!123")
     assert updated_user.first_name == "New"
+
+
+@pytest.mark.django_db
+def test_update_user_field_not_nullable(setup_system_roles):
+    user = UserService.create_user_with_role(
+        email=fake.email(),
+        password="Str0ngPass!123",
+        role_name=DefaultSystemRole.CLIENT,
+    )
+
+    UserService.update_user(user, last_name=None)
