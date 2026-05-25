@@ -94,7 +94,12 @@ class UserService:
                 update_fields.append(field)
 
         if update_fields:
-            user.full_clean()
+            excluded_fields = [
+                field.name
+                for field in user._meta.fields
+                if field.name not in update_fields
+            ]
+            user.full_clean(exclude=excluded_fields)
             user.save(update_fields=update_fields)
 
         if role_updated:

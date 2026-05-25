@@ -52,7 +52,13 @@ def test_update_me_validation_error(client_query, client):
 @pytest.mark.django_db
 def test_update_me_success(client_query, client):
     user = AutoFixture(
-        User, overrides={"first_name": "Old", "last_name": "Name"}
+        User,
+        overrides={
+            "first_name": "Old",
+            "last_name": "Name",
+            "state": User.StateChoices.NONE,
+            "username": "oldname",
+        },
     ).create()
     client.force_login(user)
 
