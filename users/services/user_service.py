@@ -5,6 +5,9 @@ from django.utils.translation import gettext_lazy as _
 from roles.models import DefaultSystemRole, Role
 from users.models import User
 from utils.functions.generate_unique_username import generate_unique_username
+from utils.functions.normalize_nullable_field_value import (
+    normalize_nullable_field_value,
+)
 from utils.validators import validate_email, validate_password
 
 
@@ -84,6 +87,8 @@ class UserService:
             update_fields.append("password")
 
         for field, value in extra_fields.items():
+            value = normalize_nullable_field_value(user, field, value)
+
             if getattr(user, field) != value:
                 setattr(user, field, value)
                 update_fields.append(field)
