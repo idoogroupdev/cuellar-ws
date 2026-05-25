@@ -21,7 +21,7 @@ class RegisterUserInput(graphene.InputObjectType):
     email = graphene.String(required=True)
     password = graphene.String(required=True)
     first_name = graphene.String(required=True)
-    phone = graphene.String(required=True)
+    phone = graphene.String(required=False)
 
 
 class RegisterClient(graphene.Mutation):
