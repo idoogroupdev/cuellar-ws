@@ -10,6 +10,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from roles.models import Role
 from utils.functions.generate_unique_code import generate_unique_code
+from utils.validators import validate_file_size
 
 
 def client_profile_image_directory_path(instance, filename):
@@ -42,7 +43,7 @@ class User(AbstractUser):
     )
     profile_image = models.ImageField(
         upload_to=client_profile_image_directory_path,
-        validators=[validate_image_file_extension],
+        validators=[validate_image_file_extension, validate_file_size],
         blank=True,
         null=True,
     )
