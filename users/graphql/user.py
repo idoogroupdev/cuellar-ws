@@ -1,6 +1,7 @@
 import graphene
 from django.core.exceptions import ValidationError
 from graphene_django import DjangoObjectType
+from graphene_file_upload.scalars import Upload
 
 from roles.graphql.roles import PermissionNode
 from users.models import User
@@ -27,16 +28,21 @@ class UserNode(DjangoObjectType):
             "is_verified",
             "role",
             "phone",
+            "profile_image",
         )
 
     def resolve_permissions(self, info):
         return self.user_permissions.all()
+
+    def resolve_profile_image(self, info):
+        return self.profile_image.url if self.profile_image else None
 
 
 class UpdateMeInput(graphene.InputObjectType):
     first_name = graphene.String(required=False)
     last_name = graphene.String(required=False)
     phone = graphene.String(required=False)
+    profile_image = Upload(required=False)
 
 
 class UpdateMe(graphene.Mutation):
@@ -53,6 +59,7 @@ class UpdateMe(graphene.Mutation):
                 first_name=input.first_name,
                 last_name=input.last_name,
                 phone=input.phone,
+                profile_image=input.profile_image,
             )
         except ValidationError as exc:
             raise ValidationGraphQLError(fields=exc.message_dict)

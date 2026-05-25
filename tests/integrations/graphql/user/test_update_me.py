@@ -1,4 +1,5 @@
 import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from tests.autofixture import AutoFixture
 from users.models import User
@@ -11,6 +12,7 @@ mutation updateMe($input: UpdateMeInput!) {
       firstName
       lastName
       phone
+      profileImage
     }
   }
 }
@@ -80,7 +82,43 @@ def test_update_me_success(client_query, client):
         "firstName": "New",
         "lastName": "Last",
         "phone": "+5356734300",
+        "profileImage": None,
     }
     assert user.first_name == "New"
     assert user.last_name == "Last"
     assert str(user.phone) == "+5356734300"
+
+
+@pytest.mark.django_db
+def test_update_profile_image(client_file_query, client):
+
+    user = AutoFixture(
+        User,
+        overrides={
+            "first_name": "Old",
+            "last_name": "Name",
+            "state": User.StateChoices.NONE,
+            "username": "oldname",
+        },
+    ).create()
+
+    client.force_login(user)
+
+    test_file = SimpleUploadedFile(
+        name="test.png",
+        content=b"\x89PNG\r\n\x1a\n",
+        content_type="image/png",
+    )
+
+    result = client_file_query(
+        query,
+        files={
+            "input.profileImage": test_file,
+        },
+        variables={"input": {"profileImage": None}},
+    ).json()
+
+    user.refresh_from_db()
+
+    assert result["data"]["updateMe"]["user"]["profileImage"] is not None
+    assert user.profile_image.name

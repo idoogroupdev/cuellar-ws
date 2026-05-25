@@ -1,5 +1,6 @@
 import pytest
 from graphene_django.utils.testing import graphql_query
+from graphene_file_upload.django.testing import file_graphql_query
 
 from roles.management.commands import setup_roles as setup_roles_command
 
@@ -13,5 +14,15 @@ def setup_system_roles():
 def client_query(client):
     def func(*args, **kwargs):
         return graphql_query(*args, **kwargs, client=client, graphql_url="/graphql/")
+
+    return func
+
+
+@pytest.fixture
+def client_file_query(client):
+    def func(*args, **kwargs):
+        return file_graphql_query(
+            *args, **kwargs, client=client, graphql_url="/graphql/"
+        )
 
     return func
