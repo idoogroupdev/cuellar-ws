@@ -1,6 +1,8 @@
+import secrets
 from datetime import timedelta
 
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import validate_image_file_extension
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -8,6 +10,11 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from roles.models import Role
 from utils.functions.generate_unique_code import generate_unique_code
+
+
+def client_profile_image_directory_path(instance, filename):
+    token = secrets.token_urlsafe(10)
+    return f"profile_images/clients/{instance.id}/{token}_{filename}"
 
 
 class User(AbstractUser):
@@ -32,6 +39,12 @@ class User(AbstractUser):
     )
     phone = PhoneNumberField(
         verbose_name=_("phone"), blank=True, null=True, unique=True
+    )
+    profile_image = models.ImageField(
+        upload_to=client_profile_image_directory_path,
+        validators=[validate_image_file_extension],
+        blank=True,
+        null=True,
     )
 
     USERNAME_FIELD = "email"
