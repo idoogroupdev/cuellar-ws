@@ -74,6 +74,50 @@ def test_update_user_role_and_groups(setup_system_roles):
 
 
 @pytest.mark.django_db
+@pytest.mark.parametrize(
+    "role_name",
+    [
+        DefaultSystemRole.ADMIN,
+        DefaultSystemRole.OPERATOR,
+        DefaultSystemRole.BRANCH_OPERATOR,
+    ],
+)
+def test_update_user_with_staff_role_sets_is_staff_true(setup_system_roles, role_name):
+    user = UserService.create_user_with_role(
+        email=fake.email(),
+        password="Str0ngPass!123",
+        role_name=DefaultSystemRole.CLIENT,
+    )
+
+    updated_user = UserService.update_user(user, role_name=role_name)
+
+    assert updated_user.is_staff is True
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "role_name",
+    [
+        DefaultSystemRole.CLIENT,
+        DefaultSystemRole.SALESPERSON,
+        DefaultSystemRole.DELIVERY_DRIVER,
+    ],
+)
+def test_update_user_with_non_staff_role_sets_is_staff_false(
+    setup_system_roles, role_name
+):
+    user = UserService.create_user_with_role(
+        email=fake.email(),
+        password="Str0ngPass!123",
+        role_name=DefaultSystemRole.ADMIN,
+    )
+
+    updated_user = UserService.update_user(user, role_name=role_name)
+
+    assert updated_user.is_staff is False
+
+
+@pytest.mark.django_db
 def test_update_user_password_and_extra_fields(setup_system_roles):
     user = UserService.create_user_with_role(
         email=fake.email(),

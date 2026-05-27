@@ -90,6 +90,46 @@ def test_create_user_with_roles(setup_system_roles):
 
 
 @pytest.mark.django_db
+@pytest.mark.parametrize(
+    "role_name",
+    [
+        DefaultSystemRole.ADMIN,
+        DefaultSystemRole.OPERATOR,
+        DefaultSystemRole.BRANCH_OPERATOR,
+    ],
+)
+def test_create_user_with_staff_role_sets_is_staff_true(setup_system_roles, role_name):
+    user = UserService.create_user_with_role(
+        email=fake.email(),
+        password=fake.password(),
+        role_name=role_name,
+    )
+
+    assert user.is_staff is True
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "role_name",
+    [
+        DefaultSystemRole.CLIENT,
+        DefaultSystemRole.SALESPERSON,
+        DefaultSystemRole.DELIVERY_DRIVER,
+    ],
+)
+def test_create_user_with_non_staff_role_sets_is_staff_false(
+    setup_system_roles, role_name
+):
+    user = UserService.create_user_with_role(
+        email=fake.email(),
+        password=fake.password(),
+        role_name=role_name,
+    )
+
+    assert user.is_staff is False
+
+
+@pytest.mark.django_db
 def test_create_user_with_roles_email_already_exists(setup_system_roles):
     email = fake.email()
 
