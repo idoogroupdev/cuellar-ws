@@ -3,6 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand
 
 from roles.models import DefaultSystemRole, Role
+from users.models import User
 
 
 def create_permission_groups(roles: dict):
@@ -76,7 +77,7 @@ class Command(BaseCommand):
 
     def setup_admin(self):
 
-        roles = {DefaultSystemRole.ADMIN.value: {}}
+        roles = {DefaultSystemRole.ADMIN.value: {User: ["add", "view", "change"]}}
 
         create_permission_groups(roles)
 
