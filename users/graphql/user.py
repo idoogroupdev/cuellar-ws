@@ -1,5 +1,6 @@
 import graphene
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext as _
 from graphene_django import DjangoObjectType
 from graphene_file_upload.scalars import Upload
 
@@ -89,6 +90,46 @@ class CreateStaffUser(graphene.Mutation):
         return CreateStaffUser(user=user)
 
 
+class UpdateStaffUserInput(graphene.InputObjectType):
+    id = graphene.ID(required=True)
+    password = graphene.String(required=False)
+    role_name = graphene.String(required=False)
+    first_name = graphene.String(required=False)
+    last_name = graphene.String(required=False)
+    phone = graphene.String(required=False)
+
+
+class UpdateStaffUser(graphene.Mutation):
+    user = graphene.Field(UserNode)
+
+    class Arguments:
+        input = UpdateStaffUserInput(required=True)
+
+    @staff_member_required
+    @permission_required(User, ["change"])
+    def mutate(self, info, input: UpdateStaffUserInput):
+        user = User.objects.filter(pk=input.id).first()
+
+        if not user:
+            message = _("User not found.")
+            raise ValidationGraphQLError(fields={"id": [message]}, message=message)
+
+        try:
+            user = UserService.update_user(
+                user,
+                password=input.password,
+                role_name=input.role_name,
+                first_name=input.first_name,
+                last_name=input.last_name,
+                phone=input.phone,
+                is_staff=True,
+            )
+        except ValidationError as exc:
+            raise ValidationGraphQLError(fields=exc.message_dict)
+
+        return UpdateStaffUser(user=user)
+
+
 class Query(graphene.ObjectType):
     me = graphene.Field(UserNode)
 
@@ -100,6 +141,7 @@ class Query(graphene.ObjectType):
 class Mutation(graphene.ObjectType):
     update_me = UpdateMe.Field()
     create_staff_user = CreateStaffUser.Field()
+    update_staff_user = UpdateStaffUser.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
