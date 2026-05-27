@@ -105,11 +105,7 @@ class UserService:
 
         for field, value in extra_fields.items():
             model_field = user._meta.get_field(field)
-            if (
-                value is None
-                and not model_field.null
-                and getattr(model_field, "empty_strings_allowed", False)
-            ):
+            if value is None and not model_field.null:
                 continue
 
             value = normalize_nullable_field_value(user, field, value)

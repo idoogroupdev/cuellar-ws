@@ -96,6 +96,7 @@ class UpdateUserInput(graphene.InputObjectType):
     first_name = graphene.String(required=False)
     last_name = graphene.String(required=False)
     phone = graphene.String(required=False)
+    is_active = graphene.Boolean(required=False)
 
 
 class UpdateUser(graphene.Mutation):
@@ -121,6 +122,7 @@ class UpdateUser(graphene.Mutation):
                 first_name=input.first_name,
                 last_name=input.last_name,
                 phone=input.phone,
+                is_active=input.is_active,
             )
         except ValidationError as exc:
             raise ValidationGraphQLError(fields=exc.message_dict)

@@ -159,3 +159,17 @@ def test_update_user_field_not_overrides(setup_system_roles):
     user = UserService.update_user(user, first_name=None)
 
     assert user.first_name == "Name"
+
+
+@pytest.mark.django_db
+def test_update_user_boolean_field_none(setup_system_roles):
+    user = UserService.create_user_with_role(
+        email=fake.email(),
+        password="Str0ngPass!123",
+        role_name=DefaultSystemRole.CLIENT,
+        first_name="Name",
+    )
+
+    user = UserService.update_user(user, is_active=None)
+
+    assert user.is_active is True
