@@ -44,12 +44,10 @@ class UserService:
 
         username = generate_unique_username(email)
 
-        user = User(
-            username=username,
-            email=email,
-            role=role,
-            **extra_fields,
-        )
+        user = User(username=username, email=email, role=role)
+        for field, value in extra_fields.items():
+            setattr(user, field, normalize_nullable_field_value(user, field, value))
+
         user.set_password(password)
         user.full_clean()
         user.save()
