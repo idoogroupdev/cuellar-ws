@@ -16,20 +16,7 @@ class UserNode(DjangoObjectType):
 
     class Meta:
         model = User
-        fields = (
-            "id",
-            "username",
-            "email",
-            "first_name",
-            "last_name",
-            "is_staff",
-            "is_active",
-            "is_superuser",
-            "is_verified",
-            "role",
-            "phone",
-            "profile_image",
-        )
+        exclude = ("password", "last_login", "state", "date_joined")
 
     def resolve_permissions(self, info):
         return self.user_permissions.all()
