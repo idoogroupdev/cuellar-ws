@@ -44,9 +44,10 @@ class ValidationGraphQLError(GraphQLError):
     def __init__(
         self,
         fields: dict,
+        message=None,
     ):
         super().__init__(
-            self.message,
+            message or self.message,
             extensions={
                 "code": "VALIDATION_ERROR",
                 "fields": fields,
