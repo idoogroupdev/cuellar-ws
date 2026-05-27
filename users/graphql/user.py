@@ -55,7 +55,7 @@ class UpdateMe(graphene.Mutation):
         return UpdateMe(user=user)
 
 
-class CreateStaffUserInput(graphene.InputObjectType):
+class CreateUserInput(graphene.InputObjectType):
     email = graphene.String(required=True)
     password = graphene.String(required=True)
     role_name = graphene.String(required=True)
@@ -64,15 +64,15 @@ class CreateStaffUserInput(graphene.InputObjectType):
     phone = graphene.String(required=False)
 
 
-class CreateStaffUser(graphene.Mutation):
+class CreateUser(graphene.Mutation):
     user = graphene.Field(UserNode)
 
     class Arguments:
-        input = CreateStaffUserInput(required=True)
+        input = CreateUserInput(required=True)
 
     @staff_member_required
     @permission_required(User, ["add"])
-    def mutate(self, info, input: CreateStaffUserInput):
+    def mutate(self, info, input: CreateUserInput):
         try:
             user = UserService.create_user_with_role(
                 email=input.email.lower(),
@@ -81,16 +81,15 @@ class CreateStaffUser(graphene.Mutation):
                 first_name=input.first_name,
                 last_name=input.last_name,
                 phone=input.phone,
-                is_staff=True,
                 is_verified=True,
             )
         except ValidationError as exc:
             raise ValidationGraphQLError(fields=exc.message_dict)
 
-        return CreateStaffUser(user=user)
+        return CreateUser(user=user)
 
 
-class UpdateStaffUserInput(graphene.InputObjectType):
+class UpdateUserInput(graphene.InputObjectType):
     id = graphene.ID(required=True)
     password = graphene.String(required=False)
     role_name = graphene.String(required=False)
@@ -99,15 +98,15 @@ class UpdateStaffUserInput(graphene.InputObjectType):
     phone = graphene.String(required=False)
 
 
-class UpdateStaffUser(graphene.Mutation):
+class UpdateUser(graphene.Mutation):
     user = graphene.Field(UserNode)
 
     class Arguments:
-        input = UpdateStaffUserInput(required=True)
+        input = UpdateUserInput(required=True)
 
     @staff_member_required
     @permission_required(User, ["change"])
-    def mutate(self, info, input: UpdateStaffUserInput):
+    def mutate(self, info, input: UpdateUserInput):
         user = User.objects.filter(pk=input.id).first()
 
         if not user:
@@ -122,12 +121,11 @@ class UpdateStaffUser(graphene.Mutation):
                 first_name=input.first_name,
                 last_name=input.last_name,
                 phone=input.phone,
-                is_staff=True,
             )
         except ValidationError as exc:
             raise ValidationGraphQLError(fields=exc.message_dict)
 
-        return UpdateStaffUser(user=user)
+        return UpdateUser(user=user)
 
 
 class Query(graphene.ObjectType):
@@ -140,8 +138,8 @@ class Query(graphene.ObjectType):
 
 class Mutation(graphene.ObjectType):
     update_me = UpdateMe.Field()
-    create_staff_user = CreateStaffUser.Field()
-    update_staff_user = UpdateStaffUser.Field()
+    create_user = CreateUser.Field()
+    update_user = UpdateUser.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

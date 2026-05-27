@@ -11,7 +11,18 @@ from utils.functions.normalize_nullable_field_value import (
 from utils.validators import validate_email, validate_password
 
 
+STAFF_ROLE_NAMES = {
+    DefaultSystemRole.ADMIN.value,
+    DefaultSystemRole.OPERATOR.value,
+    DefaultSystemRole.BRANCH_OPERATOR.value,
+}
+
+
 class UserService:
+    @staticmethod
+    def role_is_staff(role: Role | None):
+        return role is not None and role.name in STAFF_ROLE_NAMES
+
     @staticmethod
     def validate_role_name(role_name: str | DefaultSystemRole):
         """Validate role name and return a role"""
@@ -44,7 +55,14 @@ class UserService:
 
         username = generate_unique_username(email)
 
-        user = User(username=username, email=email, role=role)
+        extra_fields.pop("is_staff", None)
+
+        user = User(
+            username=username,
+            email=email,
+            role=role,
+            is_staff=UserService.role_is_staff(role),
+        )
         for field, value in extra_fields.items():
             setattr(user, field, normalize_nullable_field_value(user, field, value))
 
@@ -67,6 +85,7 @@ class UserService:
     ) -> User:
         update_fields: list[str] = []
         role_updated = False
+        extra_fields.pop("is_staff", None)
 
         if role_name is not None:
             role = UserService.validate_role_name(role_name)
@@ -98,6 +117,11 @@ class UserService:
             if getattr(user, field) != value:
                 setattr(user, field, value)
                 update_fields.append(field)
+
+        is_staff = UserService.role_is_staff(user.role)
+        if user.is_staff != is_staff:
+            user.is_staff = is_staff
+            update_fields.append("is_staff")
 
         if update_fields:
             excluded_fields = [
