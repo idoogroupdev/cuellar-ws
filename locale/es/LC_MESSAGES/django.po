@@ -1,0 +1,122 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-27 22:58+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: roles/models.py:18
+msgid "name"
+msgstr "nombre"
+
+#: services/mail_service.py:15
+msgid "Verification code"
+msgstr "Código de verificación"
+
+#: services/mail_service.py:27
+msgid "Password recovery code"
+msgstr "Código de recuperación de contraseña"
+
+#: users/graphql/auth.py:78
+msgid "Code sent"
+msgstr "Código enviado"
+
+#: users/graphql/user.py:114
+msgid "User not found."
+msgstr "Usuario no encontrado."
+
+#: users/models.py:23
+msgid "None"
+msgstr "Ninguno"
+
+#: users/models.py:26
+msgid "Waiting for new password"
+msgstr "Esperando nueva contraseña"
+
+#: users/models.py:29
+msgid "email address"
+msgstr "dirección de correo electrónico"
+
+#: users/models.py:42
+msgid "phone"
+msgstr "teléfono"
+
+#: users/services/auth_service.py:60
+msgid "You cannot request a auth code for this time"
+msgstr "No puede solicitar un código de autenticación en este momento"
+
+#: users/services/auth_service.py:63
+msgid "User is not active"
+msgstr "El usuario no está activo"
+
+#: users/services/auth_service.py:67 users/services/auth_service.py:146
+msgid "User is already verified"
+msgstr "El usuario ya está verificado"
+
+#: users/services/auth_service.py:113 users/services/auth_service.py:140
+#: users/services/auth_service.py:149 users/services/auth_service.py:164
+#: users/services/auth_service.py:170
+msgid "Invalid auth code"
+msgstr "Código de autenticación no válido"
+
+#: users/services/auth_service.py:143 users/services/auth_service.py:167
+msgid "Auth code expired"
+msgstr "El código de autenticación ha expirado"
+
+#: users/services/auth_service.py:191
+msgid "Invalid password recovery flow"
+msgstr "Flujo de recuperación de contraseña no válido"
+
+#: users/services/auth_service.py:194
+msgid "User is not allowed to reset password"
+msgstr "El usuario no está autorizado para restablecer la contraseña"
+
+#: users/services/user_service.py:31
+msgid "Role name is required"
+msgstr "Se requiere el nombre del rol"
+
+#: users/services/user_service.py:37
+#, python-format
+msgid "Role not found: %(role)s"
+msgstr "Rol no encontrado: %(role)s"
+
+#: utils/exceptions.py:10
+msgid "You do not have permission to perform this action."
+msgstr "No tiene permiso para realizar esta acción."
+
+#: utils/exceptions.py:24
+msgid "You are not authorized to perform this action."
+msgstr "No está autorizado para realizar esta acción."
+
+#: utils/exceptions.py:35
+msgid "Your account is not verified."
+msgstr "Su cuenta no está verificada."
+
+#: utils/exceptions.py:42
+msgid "Validation error"
+msgstr "Error de validación"
+
+#: utils/exceptions.py:59
+#, python-format
+msgid "Too many attempts. Try again in %(count)s seconds."
+msgstr "Demasiados intentos. Vuelva a intentarlo en %(count)s segundos."
+
+#: utils/functions/normalize_nullable_field_value.py:14
+msgid "This field cannot be null."
+msgstr "Este campo no puede ser nulo."
+
+#: utils/validators.py:27
+msgid "File size must be less than 5MB"
+msgstr "El tamaño del archivo debe ser menor de 5MB"
