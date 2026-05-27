@@ -39,3 +39,13 @@ def permission_required(
 
 
 login_required = user_passes_test(lambda u: u.is_authenticated, exc=Unauthorized)
+
+
+def is_staff(user):
+    if not user.is_authenticated:
+        raise Unauthorized
+
+    return user.is_staff
+
+
+staff_member_required = user_passes_test(is_staff, exc=PermissionDenied)
