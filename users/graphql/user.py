@@ -62,6 +62,7 @@ class CreateUserInput(graphene.InputObjectType):
     first_name = graphene.String(required=True)
     last_name = graphene.String(required=False)
     phone = graphene.String(required=False)
+    is_active = graphene.Boolean(required=False)
 
 
 class CreateUser(graphene.Mutation):
@@ -81,6 +82,7 @@ class CreateUser(graphene.Mutation):
                 first_name=input.first_name,
                 last_name=input.last_name,
                 phone=input.phone,
+                is_active=input.is_active,
                 is_verified=True,
             )
         except ValidationError as exc:

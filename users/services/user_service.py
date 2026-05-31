@@ -64,6 +64,10 @@ class UserService:
             is_staff=UserService.role_is_staff(role),
         )
         for field, value in extra_fields.items():
+            model_field = user._meta.get_field(field)
+            if value is None and not model_field.null:
+                continue
+
             setattr(user, field, normalize_nullable_field_value(user, field, value))
 
         user.set_password(password)
