@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-27 22:58+0000\n"
+"POT-Creation-Date: 2026-06-01 14:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: roles/models.py:18
 msgid "name"
 msgstr "nombre"
@@ -33,7 +34,7 @@ msgstr "Código de recuperación de contraseña"
 msgid "Code sent"
 msgstr "Código enviado"
 
-#: users/graphql/user.py:114
+#: users/graphql/user.py:116
 msgid "User not found."
 msgstr "Usuario no encontrado."
 
@@ -117,6 +118,26 @@ msgstr "Demasiados intentos. Vuelva a intentarlo en %(count)s segundos."
 msgid "This field cannot be null."
 msgstr "Este campo no puede ser nulo."
 
-#: utils/validators.py:27
+#: utils/validators.py:35
+msgid "Password must be at least 8 characters long."
+msgstr "La contraseña debe tener al menos 8 caracteres."
+
+#: utils/validators.py:38
+msgid "Password must contain at least one uppercase letter."
+msgstr "La contraseña debe contener al menos una letra mayúscula."
+
+#: utils/validators.py:41
+msgid "Password must contain at least one lowercase letter."
+msgstr "La contraseña debe contener al menos una letra minúscula."
+
+#: utils/validators.py:44
+msgid "Password must contain at least one number."
+msgstr "La contraseña debe contener al menos un número."
+
+#: utils/validators.py:47
+msgid "Password must contain at least one special character."
+msgstr "La contraseña debe contener al menos un carácter especial."
+
+#: utils/validators.py:58
 msgid "File size must be less than 5MB"
 msgstr "El tamaño del archivo debe ser menor de 5MB"

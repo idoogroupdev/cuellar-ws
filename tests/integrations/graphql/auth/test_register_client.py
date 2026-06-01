@@ -57,7 +57,7 @@ def test_register_client_invalid_email(client_query):
         variables={
             "input": {
                 "email": "testtest.com",
-                "password": "123456Dfddfe",
+                "password": "123456Dfddfe*",
                 "phone": "+5356734300",
                 "firstName": "test",
             }
@@ -77,7 +77,7 @@ def test_register_client(client_query, setup_system_roles):
         variables={
             "input": {
                 "email": "test@test.com",
-                "password": "123456Dfddfe",
+                "password": "123456Dfddfe*",
                 "phone": "+5356734300",
                 "firstName": "test",
             }

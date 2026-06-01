@@ -26,7 +26,7 @@ mutation createUser($input: CreateUserInput!) {
 def build_input(**overrides):
     data = {
         "email": "user@example.com",
-        "password": "123456Dfddfe",
+        "password": "123456Dfddfe*",
         "roleName": DefaultSystemRole.SALESPERSON.value,
         "firstName": "User",
         "lastName": "User",
@@ -84,7 +84,7 @@ def test_create_user_with_non_staff_role_success(
     user = User.objects.create_user(
         username="admin",
         email="admin@example.com",
-        password="123456Dfddfe",
+        password="123456Dfddfe*",
         is_staff=True,
         is_verified=True,
         role=admin_role,
@@ -126,7 +126,7 @@ def test_create_user_with_staff_role_success(client_query, client, setup_system_
     user = User.objects.create_user(
         username="admin",
         email="admin@example.com",
-        password="123456Dfddfe",
+        password="123456Dfddfe*",
         is_staff=True,
         is_verified=True,
         role=admin_role,
