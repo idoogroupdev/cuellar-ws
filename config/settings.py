@@ -33,6 +33,8 @@ INSTALLED_APPS = [
     "users",
     "graphene_django",
     "graphql_jwt.refresh_token.apps.RefreshTokenConfig",
+    "graphql_jwt",
+    "phonenumber_field",
 ]
 
 
@@ -47,6 +49,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
