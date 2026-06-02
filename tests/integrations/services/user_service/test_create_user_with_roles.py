@@ -15,7 +15,7 @@ def test_create_user_with_roles_empty_role_name():
     with pytest.raises(ValidationError):
         UserService.create_user_with_role(
             email=fake.email(),
-            password=fake.password(),
+            password=fake.password(special_chars=True),
             role_name="",
         )
 
@@ -77,7 +77,7 @@ def test_create_user_with_roles(setup_system_roles):
 
     user = UserService.create_user_with_role(
         email=fake.email(),
-        password=fake.password(),
+        password=fake.password(special_chars=True),
         role_name=DefaultSystemRole.CLIENT,
         first_name=fake.first_name(),
         phone="+5356734300",
