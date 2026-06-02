@@ -1,6 +1,8 @@
 from django.utils.translation import gettext_lazy as _
 from graphql.error import GraphQLError
 
+from utils.functions.normalize_keys import normalize_keys
+
 
 class PermissionDenied(GraphQLError):
     """
@@ -50,7 +52,7 @@ class ValidationGraphQLError(GraphQLError):
             message or self.message,
             extensions={
                 "code": "VALIDATION_ERROR",
-                "fields": fields,
+                "fields": normalize_keys(fields),
             },
         )
 
