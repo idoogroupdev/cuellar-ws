@@ -2,6 +2,7 @@ import graphene
 import graphql_jwt
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
+from fcm_django.models import DeviceType
 from graphene.types.generic import GenericScalar
 
 from roles.models import DefaultSystemRole
@@ -10,6 +11,8 @@ from users.services.auth_service import AuthService
 from users.services.user_service import UserService
 from utils.decorators import login_required
 from utils.exceptions import UserNotVerified, ValidationGraphQLError
+
+DeviceTypeEnum = graphene.Enum.from_enum(DeviceType)
 
 
 class AuthCodeEnum(graphene.Enum):
@@ -47,6 +50,11 @@ class RegisterClient(graphene.Mutation):
 
 class Login(graphql_jwt.ObtainJSONWebToken):
     user = graphene.Field(UserNode)
+
+    class Arguments:
+        firebase_registration_id = graphene.String()
+        device_id = graphene.String()
+        device_type = DeviceTypeEnum()
 
     @classmethod
     def resolve(cls, root, info, **kwargs):
