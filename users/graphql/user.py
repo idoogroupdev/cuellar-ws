@@ -2,6 +2,7 @@ import graphene
 from django.contrib.auth.models import Permission
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
+from django_filters import OrderingFilter
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_file_upload.scalars import Upload
@@ -11,6 +12,7 @@ from users.models import User
 from users.services.user_service import UserService
 from utils.decorators import login_required, permission_required, staff_member_required
 from utils.exceptions import ValidationGraphQLError
+from utils.filters import FullFilterSet
 
 
 class UserNode(DjangoObjectType):
@@ -28,6 +30,34 @@ class UserNode(DjangoObjectType):
 
     def resolve_profile_image(self, info):
         return self.profile_image.url if self.profile_image else None
+
+
+class UserFilter(FullFilterSet):
+    order_by = OrderingFilter(
+        fields=(
+            "first_name",
+            "last_name",
+            "email",
+            "date_joined",
+            "is_active",
+            "id",
+            "is_staff",
+        )
+    )
+
+    class Meta:
+        model = User
+        fields = {
+            "first_name": ["icontains"],
+            "last_name": ["icontains"],
+            "email": ["icontains"],
+            "date_joined": ["icontains"],
+        }
+        or_fields = {
+            "first_name": ["icontains"],
+            "last_name": ["icontains"],
+            "email": ["icontains"],
+        }
 
 
 class UpdateMeInput(graphene.InputObjectType):
@@ -138,7 +168,7 @@ class UpdateUser(graphene.Mutation):
 
 class Query(graphene.ObjectType):
     me = graphene.Field(UserNode)
-    all_users = DjangoFilterConnectionField(UserNode)
+    all_users = DjangoFilterConnectionField(UserNode, filterset_class=UserFilter)
 
     @login_required
     def resolve_me(self, info):
