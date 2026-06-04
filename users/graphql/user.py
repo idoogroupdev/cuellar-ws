@@ -3,6 +3,7 @@ from django.contrib.auth.models import Permission
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from graphene_django import DjangoObjectType
+from graphene_django.filter import DjangoFilterConnectionField
 from graphene_file_upload.scalars import Upload
 
 from roles.graphql.roles import PermissionNode
@@ -19,6 +20,8 @@ class UserNode(DjangoObjectType):
     class Meta:
         model = User
         exclude = ("password", "last_login", "state", "date_joined", "user_permissions")
+        filter_fields = []
+        interfaces = (graphene.relay.Node,)
 
     def resolve_permissions(self, info):
         return Permission.objects.filter(group__in=self.groups.all()).distinct()
@@ -135,10 +138,16 @@ class UpdateUser(graphene.Mutation):
 
 class Query(graphene.ObjectType):
     me = graphene.Field(UserNode)
+    all_users = DjangoFilterConnectionField(UserNode)
 
     @login_required
     def resolve_me(self, info):
         return info.context.user
+
+    @staff_member_required
+    @permission_required(User, ["view"])
+    def resolve_all_users(self, info, **kwargs):
+        return User.objects.all()
 
 
 class Mutation(graphene.ObjectType):
