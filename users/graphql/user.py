@@ -1,4 +1,5 @@
 import graphene
+from django.contrib.auth.models import Permission
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from graphene_django import DjangoObjectType
@@ -20,7 +21,7 @@ class UserNode(DjangoObjectType):
         exclude = ("password", "last_login", "state", "date_joined", "user_permissions")
 
     def resolve_permissions(self, info):
-        return self.user_permissions.all()
+        return Permission.objects.filter(group__in=self.groups.all()).distinct()
 
     def resolve_profile_image(self, info):
         return self.profile_image.url if self.profile_image else None
