@@ -101,7 +101,7 @@ def test_create_user_with_roles(setup_system_roles):
 def test_create_user_with_staff_role_sets_is_staff_true(setup_system_roles, role_name):
     user = UserService.create_user_with_role(
         email=fake.email(),
-        password=fake.password(),
+        password="A1b*sDs3434",
         role_name=role_name,
     )
 
