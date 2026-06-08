@@ -4,7 +4,6 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django_filters import OrderingFilter
 from graphene_django import DjangoObjectType
-from graphene_django.filter import DjangoFilterConnectionField
 from graphene_file_upload.scalars import Upload
 
 from roles.graphql.roles import PermissionNode
@@ -13,6 +12,7 @@ from users.services.user_service import UserService
 from utils.decorators import login_required, permission_required, staff_member_required
 from utils.exceptions import ValidationGraphQLError
 from utils.filters import FullFilterSet
+from utils.graphql import BaseConnection, ConnectionField
 
 
 class UserNode(DjangoObjectType):
@@ -24,6 +24,7 @@ class UserNode(DjangoObjectType):
         exclude = ("password", "last_login", "state", "date_joined", "user_permissions")
         filter_fields = []
         interfaces = (graphene.relay.Node,)
+        connection_class = BaseConnection
 
     def resolve_permissions(self, info):
         return Permission.objects.filter(group__in=self.groups.all()).distinct()
@@ -168,7 +169,7 @@ class UpdateUser(graphene.Mutation):
 
 class Query(graphene.ObjectType):
     me = graphene.Field(UserNode)
-    all_users = DjangoFilterConnectionField(UserNode, filterset_class=UserFilter)
+    all_users = ConnectionField(UserNode, filterset_class=UserFilter)
 
     @login_required
     def resolve_me(self, info):
