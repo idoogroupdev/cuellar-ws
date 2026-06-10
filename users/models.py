@@ -47,6 +47,7 @@ class User(AbstractUser):
         blank=True,
         null=True,
     )
+    session_version = models.PositiveIntegerField(default=1)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]

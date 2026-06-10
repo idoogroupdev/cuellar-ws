@@ -21,7 +21,14 @@ class UserNode(DjangoObjectType):
 
     class Meta:
         model = User
-        exclude = ("password", "last_login", "state", "date_joined", "user_permissions")
+        exclude = (
+            "password",
+            "last_login",
+            "state",
+            "date_joined",
+            "user_permissions",
+            "session_version",
+        )
         filter_fields = []
         interfaces = (graphene.relay.Node,)
         connection_class = BaseConnection
