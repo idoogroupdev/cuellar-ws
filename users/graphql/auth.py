@@ -66,10 +66,10 @@ class Login(graphql_jwt.ObtainJSONWebToken):
             return None
 
         FCMDevice.objects.update_or_create(
-            registration_id=firebase_registration_id,
+            user_id=user_id,
             defaults={
+                "registration_id": firebase_registration_id,
                 "device_id": device_id,
-                "user_id": user_id,
                 "type": device_type.value if device_type else None,
             },
         )
