@@ -134,6 +134,7 @@ GRAPHENE = {
     "SCHEMA": "config.schema.schema",
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
+        "config.middleware.SingleSessionJWTMiddleware",
     ],
 }
 
@@ -143,6 +144,7 @@ GRAPHQL_JWT = {
     "JWT_REFRESH_EXPIRED_HANDLER": lambda orig_iat, context: False,
     "JWT_EXPIRATION_DELTA": timedelta(hours=24),
     "JWT_REFRESH_EXPIRATION_DELTA": timedelta(days=7),
+    "JWT_PAYLOAD_HANDLER": "users.jwt.jwt_payload",
 }
 
 

@@ -76,10 +76,12 @@ class Login(graphql_jwt.ObtainJSONWebToken):
 
     @classmethod
     def resolve(cls, root, info, **kwargs):
-        if not info.context.user.is_verified:
+        user = info.context.user
+
+        if not user.is_verified:
             raise UserNotVerified
 
-        if kwargs.get("is_mobile", False) and info.context.user.role.name not in (
+        if kwargs.get("is_mobile", False) and user.role.name not in (
             DefaultSystemRole.CLIENT,
             DefaultSystemRole.SALESPERSON,
             DefaultSystemRole.DELIVERY_DRIVER,
@@ -87,13 +89,16 @@ class Login(graphql_jwt.ObtainJSONWebToken):
             raise PermissionDenied
 
         cls.register_fmc_device(
-            user_id=info.context.user.id,
+            user_id=user.id,
             firebase_registration_id=kwargs.get("firebase_registration_id"),
             device_id=kwargs.get("device_id"),
             device_type=kwargs.get("device_type"),
         )
 
-        return cls(user=info.context.user)
+        user.session_version += 1
+        user.save(update_fields=["session_version"])
+
+        return cls(user=user)
 
 
 class RequestAuthCodeInput(graphene.InputObjectType):

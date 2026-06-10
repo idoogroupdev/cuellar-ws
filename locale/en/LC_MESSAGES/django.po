@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-01 14:14+0000\n"
+"POT-Creation-Date: 2026-06-10 09:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: config/middleware.py:27
+msgid "Your session has been closed."
+msgstr ""
 
 #: roles/models.py:18
 msgid "name"
@@ -30,11 +34,11 @@ msgstr ""
 msgid "Password recovery code"
 msgstr ""
 
-#: users/graphql/auth.py:78
+#: users/graphql/auth.py:124
 msgid "Code sent"
 msgstr ""
 
-#: users/graphql/user.py:116
+#: users/graphql/user.py:158
 msgid "User not found."
 msgstr ""
 
@@ -93,23 +97,23 @@ msgstr ""
 msgid "Role not found: %(role)s"
 msgstr ""
 
-#: utils/exceptions.py:10
+#: utils/exceptions.py:12
 msgid "You do not have permission to perform this action."
 msgstr ""
 
-#: utils/exceptions.py:24
+#: utils/exceptions.py:26
 msgid "You are not authorized to perform this action."
 msgstr ""
 
-#: utils/exceptions.py:35
+#: utils/exceptions.py:37
 msgid "Your account is not verified."
 msgstr ""
 
-#: utils/exceptions.py:42
+#: utils/exceptions.py:44
 msgid "Validation error"
 msgstr ""
 
-#: utils/exceptions.py:59
+#: utils/exceptions.py:61
 #, python-format
 msgid "Too many attempts. Try again in %(count)s seconds."
 msgstr ""
