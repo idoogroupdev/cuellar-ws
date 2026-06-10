@@ -2,7 +2,7 @@ import graphene
 import graphql_jwt
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
-from fcm_django.models import DeviceType
+from fcm_django.models import DeviceType, FCMDevice
 from graphene.types.generic import GenericScalar
 
 from roles.models import DefaultSystemRole
@@ -10,7 +10,7 @@ from users.graphql.user import UserNode
 from users.services.auth_service import AuthService
 from users.services.user_service import UserService
 from utils.decorators import login_required
-from utils.exceptions import UserNotVerified, ValidationGraphQLError
+from utils.exceptions import PermissionDenied, UserNotVerified, ValidationGraphQLError
 
 DeviceTypeEnum = graphene.Enum.from_enum(DeviceType)
 
@@ -55,11 +55,44 @@ class Login(graphql_jwt.ObtainJSONWebToken):
         firebase_registration_id = graphene.String()
         device_id = graphene.String()
         device_type = DeviceTypeEnum()
+        is_mobile = graphene.Boolean()
+
+    @classmethod
+    def register_fmc_device(
+        cls, user_id, firebase_registration_id, device_id, device_type
+    ):
+
+        if not firebase_registration_id:
+            return None
+
+        FCMDevice.objects.update_or_create(
+            registration_id=firebase_registration_id,
+            defaults={
+                "device_id": device_id,
+                "user_id": user_id,
+                "type": device_type.value if device_type else None,
+            },
+        )
 
     @classmethod
     def resolve(cls, root, info, **kwargs):
         if not info.context.user.is_verified:
             raise UserNotVerified
+
+        if kwargs.get("is_mobile", False) and info.context.user.role.name not in (
+            DefaultSystemRole.CLIENT,
+            DefaultSystemRole.SALESPERSON,
+            DefaultSystemRole.DELIVERY_DRIVER,
+        ):
+            raise PermissionDenied
+
+        cls.register_fmc_device(
+            user_id=info.context.user.id,
+            firebase_registration_id=kwargs.get("firebase_registration_id"),
+            device_id=kwargs.get("device_id"),
+            device_type=kwargs.get("device_type"),
+        )
+
         return cls(user=info.context.user)
 
 

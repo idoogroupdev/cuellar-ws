@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "graphql_jwt.refresh_token.apps.RefreshTokenConfig",
     "graphql_jwt",
     "phonenumber_field",
+    "fcm_django",
 ]
 
 
