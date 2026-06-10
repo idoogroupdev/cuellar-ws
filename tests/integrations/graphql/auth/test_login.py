@@ -89,3 +89,53 @@ def test_login_role_admin_from_mobile(client_query, setup_system_roles):
     ).json()
 
     assert result["errors"][0]["extensions"] == {"code": "PERMISSION_DENIED"}
+
+
+@pytest.mark.django_db
+def test_check_only_one_session_active(client_query):
+    User.objects.create_user(
+        username="admin",
+        email="admin@example.com",
+        password="123456Dfddfe*",
+        is_verified=True,
+    )
+
+    result = client_query(
+        query,
+        variables={
+            "email": "admin@example.com",
+            "password": "123456Dfddfe*",
+        },
+    ).json()
+
+    session1 = result["data"]["login"]["token"]
+
+    result = client_query(
+        query,
+        variables={
+            "email": "admin@example.com",
+            "password": "123456Dfddfe*",
+        },
+    ).json()
+
+    session2 = result["data"]["login"]["token"]
+
+    query_me = """
+    query MyQuery {
+    me {
+        email
+    }
+    }
+    """
+
+    result1 = client_query(
+        query_me, headers={"Authorization": f"JWT {session1}"}
+    ).json()
+
+    assert result1["errors"][0]["message"] == "Your session has been closed."
+
+    result2 = client_query(
+        query_me, headers={"Authorization": f"JWT {session2}"}
+    ).json()
+
+    assert result2["data"]["me"]["email"] == "admin@example.com"
