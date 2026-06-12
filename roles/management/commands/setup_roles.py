@@ -2,6 +2,7 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand
 
+from branches.models import Branch, BranchHour
 from roles.models import DefaultSystemRole, Role
 from users.models import User
 
@@ -77,13 +78,24 @@ class Command(BaseCommand):
 
     def setup_admin(self):
 
-        roles = {DefaultSystemRole.ADMIN.value: {User: ["add", "view", "change"]}}
+        roles = {
+            DefaultSystemRole.ADMIN.value: {
+                User: ["add", "view", "change"],
+                Branch: ["add", "view", "change"],
+                BranchHour: self.all_permissions,
+            }
+        }
 
         create_permission_groups(roles)
 
     def setup_operator(self):
 
-        roles = {DefaultSystemRole.OPERATOR.value: {}}
+        roles = {
+            DefaultSystemRole.OPERATOR.value: {
+                Branch: ["add", "view", "change"],
+                BranchHour: self.all_permissions,
+            }
+        }
 
         create_permission_groups(roles)
 
