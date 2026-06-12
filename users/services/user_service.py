@@ -10,7 +10,6 @@ from utils.functions.normalize_nullable_field_value import (
 )
 from utils.validators import validate_email, validate_password
 
-
 STAFF_ROLE_NAMES = {
     DefaultSystemRole.ADMIN.value,
     DefaultSystemRole.OPERATOR.value,
@@ -18,10 +17,19 @@ STAFF_ROLE_NAMES = {
 }
 
 
+SUPERUSER_ROLE_NAMES = {
+    DefaultSystemRole.ADMIN.value,
+}
+
+
 class UserService:
     @staticmethod
     def role_is_staff(role: Role | None):
         return role is not None and role.name in STAFF_ROLE_NAMES
+
+    @staticmethod
+    def role_is_superuser(role: Role | None):
+        return role is not None and role.name in SUPERUSER_ROLE_NAMES
 
     @staticmethod
     def validate_role_name(role_name: str | DefaultSystemRole):
@@ -62,6 +70,7 @@ class UserService:
             email=email,
             role=role,
             is_staff=UserService.role_is_staff(role),
+            is_superuser=UserService.role_is_superuser(role),
         )
         for field, value in extra_fields.items():
             model_field = user._meta.get_field(field)
@@ -122,6 +131,11 @@ class UserService:
         if user.is_staff != is_staff:
             user.is_staff = is_staff
             update_fields.append("is_staff")
+
+        is_superuser = UserService.role_is_superuser(user.role)
+        if user.is_superuser != is_superuser:
+            user.is_superuser = is_superuser
+            update_fields.append("is_superuser")
 
         if update_fields:
             excluded_fields = [

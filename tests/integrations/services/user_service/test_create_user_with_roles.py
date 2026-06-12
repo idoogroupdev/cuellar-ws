@@ -164,3 +164,14 @@ def test_create_user_with_roles_phone_already_exists(setup_system_roles):
             role_name=DefaultSystemRole.CLIENT,
             phone="+5356734300",
         )
+
+
+@pytest.mark.django_db
+def test_create_user_set_superuser_from_role(setup_system_roles):
+    user = UserService.create_user_with_role(
+        email=fake.email(),
+        password="Str0ngPass!123",
+        role_name=DefaultSystemRole.ADMIN,
+    )
+
+    assert user.is_superuser is True
