@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "graphql_jwt",
     "phonenumber_field",
     "fcm_django",
+    "branches",
 ]
 
 
