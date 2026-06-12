@@ -60,6 +60,7 @@ class UserFilter(FullFilterSet):
             "last_name": ["icontains"],
             "email": ["icontains"],
             "date_joined": ["icontains"],
+            "role__name": ["exact"],
         }
         or_fields = {
             "first_name": ["icontains"],
