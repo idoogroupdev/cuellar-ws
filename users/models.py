@@ -2,8 +2,10 @@ import secrets
 from datetime import timedelta
 
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.core.validators import validate_image_file_extension
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
@@ -51,6 +53,20 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(is_superuser=False) | Q(is_active=True),
+                name="superuser_must_be_active",
+            ),
+        ]
+
+    def clean(self):
+        if self.is_superuser and not self.is_active:
+            raise ValidationError(
+                {"is_active": _("A superuser cannot be deactivated.")}
+            )
 
 
 def default_expiration_date():

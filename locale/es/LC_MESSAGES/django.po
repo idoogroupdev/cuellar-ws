@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-10 09:58+0000\n"
+"POT-Creation-Date: 2026-06-12 12:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,21 +42,25 @@ msgstr "Código enviado"
 msgid "User not found."
 msgstr "Usuario no encontrado."
 
-#: users/models.py:23
+#: users/models.py:25
 msgid "None"
 msgstr "Ninguno"
 
-#: users/models.py:26
+#: users/models.py:28
 msgid "Waiting for new password"
 msgstr "Esperando nueva contraseña"
 
-#: users/models.py:29
+#: users/models.py:31
 msgid "email address"
 msgstr "dirección de correo electrónico"
 
-#: users/models.py:42
+#: users/models.py:44
 msgid "phone"
 msgstr "teléfono"
+
+#: users/models.py:68
+msgid "A superuser cannot be deactivated."
+msgstr "Un superusuario no puede ser desactivado"
 
 #: users/services/auth_service.py:60
 msgid "You cannot request a auth code for this time"
@@ -88,11 +92,11 @@ msgstr "Flujo de recuperación de contraseña no válido"
 msgid "User is not allowed to reset password"
 msgstr "El usuario no está autorizado para restablecer la contraseña"
 
-#: users/services/user_service.py:31
+#: users/services/user_service.py:39
 msgid "Role name is required"
 msgstr "Se requiere el nombre del rol"
 
-#: users/services/user_service.py:37
+#: users/services/user_service.py:45
 #, python-format
 msgid "Role not found: %(role)s"
 msgstr "Rol no encontrado: %(role)s"
