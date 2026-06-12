@@ -122,7 +122,7 @@ def test_create_user_with_non_staff_role_sets_is_staff_false(
 ):
     user = UserService.create_user_with_role(
         email=fake.email(),
-        password=fake.password(),
+        password="A1b*sDs3434",
         role_name=role_name,
     )
 
