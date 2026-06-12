@@ -175,3 +175,14 @@ def test_create_user_set_superuser_from_role(setup_system_roles):
     )
 
     assert user.is_superuser is True
+
+
+@pytest.mark.django_db
+def test_create_superuser_deactivated(setup_system_roles):
+    with pytest.raises(ValidationError):
+        UserService.create_user_with_role(
+            email=fake.email(),
+            password="Str0ngPass!123",
+            role_name=DefaultSystemRole.ADMIN,
+            is_active=False,
+        )
