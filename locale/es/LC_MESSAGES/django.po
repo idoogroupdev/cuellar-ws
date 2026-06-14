@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 12:25+0000\n"
+"POT-Creation-Date: 2026-06-14 01:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,50 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: branches/models.py:39
+msgid "Sunday"
+msgstr "Domingo"
+
+#: branches/models.py:40
+msgid "Monday"
+msgstr "Lunes"
+
+#: branches/models.py:41
+msgid "Tuesday"
+msgstr "Martes"
+
+#: branches/models.py:42
+msgid "Wednesday"
+msgstr "Miércoles"
+
+#: branches/models.py:43
+msgid "Thursday"
+msgstr "Jueves"
+
+#: branches/models.py:44
+msgid "Friday"
+msgstr "Viernes"
+
+#: branches/models.py:45
+msgid "Saturday"
+msgstr "Sábado"
+
+#: branches/models.py:51
+msgid "branch"
+msgstr "sucursal"
+
+#: branches/models.py:54
+msgid "day of week"
+msgstr "día de la semana"
+
+#: branches/models.py:63
+msgid "branch hour"
+msgstr "horario de la sucursal"
+
+#: branches/models.py:64
+msgid "branches hours"
+msgstr "horarios de las sucursales"
 
 #: config/middleware.py:27
 msgid "Your session has been closed."
@@ -38,7 +82,7 @@ msgstr "Código de recuperación de contraseña"
 msgid "Code sent"
 msgstr "Código enviado"
 
-#: users/graphql/user.py:158
+#: users/graphql/user.py:159
 msgid "User not found."
 msgstr "Usuario no encontrado."
 

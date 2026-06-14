@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 12:25+0000\n"
+"POT-Creation-Date: 2026-06-14 01:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,50 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: branches/models.py:39
+msgid "Sunday"
+msgstr ""
+
+#: branches/models.py:40
+msgid "Monday"
+msgstr ""
+
+#: branches/models.py:41
+msgid "Tuesday"
+msgstr ""
+
+#: branches/models.py:42
+msgid "Wednesday"
+msgstr ""
+
+#: branches/models.py:43
+msgid "Thursday"
+msgstr ""
+
+#: branches/models.py:44
+msgid "Friday"
+msgstr ""
+
+#: branches/models.py:45
+msgid "Saturday"
+msgstr ""
+
+#: branches/models.py:51
+msgid "branch"
+msgstr ""
+
+#: branches/models.py:54
+msgid "day of week"
+msgstr ""
+
+#: branches/models.py:63
+msgid "branch hour"
+msgstr ""
+
+#: branches/models.py:64
+msgid "branches hours"
+msgstr ""
 
 #: config/middleware.py:27
 msgid "Your session has been closed."
@@ -38,7 +82,7 @@ msgstr ""
 msgid "Code sent"
 msgstr ""
 
-#: users/graphql/user.py:158
+#: users/graphql/user.py:159
 msgid "User not found."
 msgstr ""
 
