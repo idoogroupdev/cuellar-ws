@@ -136,7 +136,6 @@ class CreateUser(graphene.Mutation):
 
 class UpdateUserInput(graphene.InputObjectType):
     id = graphene.ID(required=True)
-    password = graphene.String(required=False)
     role_name = graphene.String(required=False)
     first_name = graphene.String(required=False)
     last_name = graphene.String(required=False)
@@ -162,7 +161,6 @@ class UpdateUser(graphene.Mutation):
         try:
             user = UserService.update_user(
                 user,
-                password=input.password,
                 role_name=input.role_name,
                 first_name=input.first_name,
                 last_name=input.last_name,
