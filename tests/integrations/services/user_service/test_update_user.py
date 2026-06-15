@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 from faker import Faker
 
+from branches.services.branch_service import BranchService
 from roles.models import DefaultSystemRole, Role
 from users.services.user_service import UserService
 
@@ -200,3 +201,24 @@ def test_update_user_deactivate_superuser(setup_system_roles):
 
     with pytest.raises(ValidationError):
         UserService.update_user(user, is_active=False)
+
+
+@pytest.mark.django_db
+def test_update_user_set_null_when_roles_changes(setup_system_roles):
+
+    branch = BranchService.create_branch(
+        name=fake.word(),
+        address=fake.address(),
+        is_active=True,
+    )
+
+    user = UserService.create_user(
+        email=fake.email(),
+        password="Str0ngPass!123",
+        role_name=DefaultSystemRole.BRANCH_OPERATOR,
+        branch_id=branch.id,
+    )
+
+    updated_user = UserService.update_user(user, role_name=DefaultSystemRole.ADMIN)
+
+    assert updated_user.branch is None
