@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
+from branches.models import Branch
 from roles.models import Role
 from utils.functions.generate_unique_code import generate_unique_code
 from utils.validators import validate_file_size
@@ -50,6 +51,13 @@ class User(AbstractUser):
         null=True,
     )
     session_version = models.PositiveIntegerField(default=1)
+    branch = models.ForeignKey(
+        Branch,
+        on_delete=models.SET_NULL,
+        related_name="users",
+        null=True,
+        blank=True,
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
