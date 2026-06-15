@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
+from branches.models import Branch
 from roles.models import DefaultSystemRole, Role
 from users.models import User
 from utils.functions.generate_unique_username import generate_unique_username
@@ -48,29 +49,53 @@ class UserService:
         return role
 
     @staticmethod
+    def validate_branch(id: int | None, role_name: str | DefaultSystemRole = None):
+
+        if role_name == DefaultSystemRole.BRANCH_OPERATOR and id is None:
+            raise ValidationError({"branch_id": _("Branch is required")})
+
+        if role_name != DefaultSystemRole.BRANCH_OPERATOR:
+            return None
+
+        branch = Branch.objects.filter(id=id).first()
+
+        if not branch:
+            raise ValidationError(
+                {"branch_id": _("Branch not found: %(branch)s") % {"branch": id}}
+            )
+
+        if not branch.is_active:
+            raise ValidationError(
+                {"branch_id": _("Branch is not active: %(branch)s") % {"branch": id}}
+            )
+
+        return branch
+
+    @staticmethod
     @transaction.atomic
     def create_user(
         *,
         email: str,
         password: str,
         role_name: str | DefaultSystemRole,
+        branch_id: int = None,
         **extra_fields,
     ) -> User:
 
         validate_password(password)
         validate_email(email)
         role = UserService.validate_role_name(role_name)
-
-        username = generate_unique_username(email)
+        branch = UserService.validate_branch(branch_id, role_name)
 
         extra_fields.pop("is_staff", None)
 
         user = User(
-            username=username,
+            username=generate_unique_username(email),
             email=email,
             role=role,
             is_staff=UserService.role_is_staff(role),
             is_superuser=UserService.role_is_superuser(role),
+            branch=branch,
         )
         for field, value in extra_fields.items():
             model_field = user._meta.get_field(field)
@@ -94,6 +119,7 @@ class UserService:
         *,
         role_name: str | DefaultSystemRole | None = None,
         password: str | None = None,
+        branch_id: int = None,
         **extra_fields,
     ) -> User:
         update_fields: list[str] = []

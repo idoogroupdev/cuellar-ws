@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 from faker import Faker
 
+from branches.services.branch_service import BranchService
 from roles.models import DefaultSystemRole, Role
 from users.services.user_service import UserService
 
@@ -99,10 +100,17 @@ def test_create_user_with_roles(setup_system_roles):
     ],
 )
 def test_create_user_with_staff_role_sets_is_staff_true(setup_system_roles, role_name):
+    branch = BranchService.create_branch(
+        name=fake.word(),
+        address=fake.address(),
+        is_active=True,
+    )
+
     user = UserService.create_user(
         email=fake.email(),
         password="A1b*sDs3434",
         role_name=role_name,
+        branch_id=branch.id,
     )
 
     assert user.is_staff is True
@@ -185,4 +193,14 @@ def test_create_superuser_deactivated(setup_system_roles):
             password="Str0ngPass!123",
             role_name=DefaultSystemRole.ADMIN,
             is_active=False,
+        )
+
+
+@pytest.mark.django_db
+def test_create_user_branch_operator_without_branch(setup_system_roles):
+    with pytest.raises(ValidationError):
+        UserService.create_user(
+            email=fake.email(),
+            password="Str0ngPass!123",
+            role_name=DefaultSystemRole.BRANCH_OPERATOR,
         )

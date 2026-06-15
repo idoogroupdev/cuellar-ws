@@ -106,6 +106,7 @@ class CreateUserInput(graphene.InputObjectType):
     last_name = graphene.String(required=False)
     phone = graphene.String(required=False)
     is_active = graphene.Boolean(required=False)
+    branch_id = graphene.ID(required=False)
 
 
 class CreateUser(graphene.Mutation):
@@ -122,6 +123,7 @@ class CreateUser(graphene.Mutation):
                 email=input.email.lower(),
                 password=input.password,
                 role_name=input.role_name,
+                branch_id=input.branch_id,
                 first_name=input.first_name,
                 last_name=input.last_name,
                 phone=input.phone,
