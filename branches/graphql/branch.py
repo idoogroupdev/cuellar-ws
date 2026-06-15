@@ -15,7 +15,7 @@ class BranchNode(DjangoObjectType):
     class Meta:
         model = Branch
         exclude = ("created_at", "updated_at")
-        filter_fields = []
+        filter_fields = ["is_active"]
         interfaces = (graphene.relay.Node,)
         connection_class = BaseConnection
 
