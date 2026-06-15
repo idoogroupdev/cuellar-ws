@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-14 01:14+0000\n"
+"POT-Creation-Date: 2026-06-15 11:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -82,27 +82,27 @@ msgstr ""
 msgid "Code sent"
 msgstr ""
 
-#: users/graphql/user.py:159
+#: users/graphql/user.py:161
 msgid "User not found."
 msgstr ""
 
-#: users/models.py:25
+#: users/models.py:26
 msgid "None"
 msgstr ""
 
-#: users/models.py:28
+#: users/models.py:29
 msgid "Waiting for new password"
 msgstr ""
 
-#: users/models.py:31
+#: users/models.py:32
 msgid "email address"
 msgstr ""
 
-#: users/models.py:44
+#: users/models.py:45
 msgid "phone"
 msgstr ""
 
-#: users/models.py:68
+#: users/models.py:76
 msgid "A superuser cannot be deactivated."
 msgstr ""
 
@@ -136,13 +136,27 @@ msgstr ""
 msgid "User is not allowed to reset password"
 msgstr ""
 
-#: users/services/user_service.py:39
+#: users/services/user_service.py:40
 msgid "Role name is required"
 msgstr ""
 
-#: users/services/user_service.py:45
+#: users/services/user_service.py:46
 #, python-format
 msgid "Role not found: %(role)s"
+msgstr ""
+
+#: users/services/user_service.py:55
+msgid "Branch is required"
+msgstr ""
+
+#: users/services/user_service.py:64
+#, python-format
+msgid "Branch not found: %(branch)s"
+msgstr ""
+
+#: users/services/user_service.py:69
+#, python-format
+msgid "Branch is not active: %(branch)s"
 msgstr ""
 
 #: utils/exceptions.py:12
