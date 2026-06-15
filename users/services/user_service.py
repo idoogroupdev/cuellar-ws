@@ -49,7 +49,7 @@ class UserService:
 
     @staticmethod
     @transaction.atomic
-    def create_user_with_role(
+    def create_user(
         *,
         email: str,
         password: str,

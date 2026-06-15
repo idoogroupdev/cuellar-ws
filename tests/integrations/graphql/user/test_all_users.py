@@ -79,13 +79,13 @@ def test_all_users_permission_denied_when_staff_lacks_view_user_permission(
 @pytest.mark.django_db
 def test_all_users_success(client_query, client, setup_system_roles):
     client.force_login(create_admin_user())
-    UserService.create_user_with_role(
+    UserService.create_user(
         email="client@example.com",
         password="123456Dfddfe*",
         role_name=DefaultSystemRole.CLIENT,
         first_name="Client",
     )
-    UserService.create_user_with_role(
+    UserService.create_user(
         email="operator@example.com",
         password="123456Dfddfe*",
         role_name=DefaultSystemRole.OPERATOR,

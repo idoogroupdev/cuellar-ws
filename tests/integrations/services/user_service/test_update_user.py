@@ -11,7 +11,7 @@ fake = Faker()
 
 @pytest.mark.django_db
 def test_update_user_with_role_not_exists(setup_system_roles):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
@@ -23,7 +23,7 @@ def test_update_user_with_role_not_exists(setup_system_roles):
 
 @pytest.mark.django_db
 def test_update_user_with_simple_password(setup_system_roles):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
@@ -35,7 +35,7 @@ def test_update_user_with_simple_password(setup_system_roles):
 
 @pytest.mark.django_db
 def test_update_user_with_invalid_email(setup_system_roles):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
@@ -47,7 +47,7 @@ def test_update_user_with_invalid_email(setup_system_roles):
 
 @pytest.mark.django_db
 def test_update_user_with_invalid_phone(setup_system_roles):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
@@ -59,7 +59,7 @@ def test_update_user_with_invalid_phone(setup_system_roles):
 
 @pytest.mark.django_db
 def test_update_user_role_and_groups(setup_system_roles):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
@@ -83,7 +83,7 @@ def test_update_user_role_and_groups(setup_system_roles):
     ],
 )
 def test_update_user_with_staff_role_sets_is_staff_true(setup_system_roles, role_name):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
@@ -106,7 +106,7 @@ def test_update_user_with_staff_role_sets_is_staff_true(setup_system_roles, role
 def test_update_user_with_non_staff_role_sets_is_staff_false(
     setup_system_roles, role_name
 ):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.ADMIN,
@@ -119,7 +119,7 @@ def test_update_user_with_non_staff_role_sets_is_staff_false(
 
 @pytest.mark.django_db
 def test_update_user_password_and_extra_fields(setup_system_roles):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
@@ -138,7 +138,7 @@ def test_update_user_password_and_extra_fields(setup_system_roles):
 
 @pytest.mark.django_db
 def test_update_user_field_not_nullable(setup_system_roles):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
@@ -149,7 +149,7 @@ def test_update_user_field_not_nullable(setup_system_roles):
 
 @pytest.mark.django_db
 def test_update_user_field_not_overrides(setup_system_roles):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
@@ -163,7 +163,7 @@ def test_update_user_field_not_overrides(setup_system_roles):
 
 @pytest.mark.django_db
 def test_update_user_boolean_field_none(setup_system_roles):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
@@ -177,7 +177,7 @@ def test_update_user_boolean_field_none(setup_system_roles):
 
 @pytest.mark.django_db
 def test_update_user_set_superuser_from_role(setup_system_roles):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
@@ -192,7 +192,7 @@ def test_update_user_set_superuser_from_role(setup_system_roles):
 
 @pytest.mark.django_db
 def test_update_user_deactivate_superuser(setup_system_roles):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.ADMIN,

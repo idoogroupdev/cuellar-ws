@@ -13,7 +13,7 @@ fake = Faker()
 def test_create_user_with_roles_empty_role_name():
 
     with pytest.raises(ValidationError):
-        UserService.create_user_with_role(
+        UserService.create_user(
             email=fake.email(),
             password=fake.password(special_chars=True),
             role_name="",
@@ -24,14 +24,14 @@ def test_create_user_with_roles_empty_role_name():
 def test_create_user_with_role_not_exists():
 
     with pytest.raises(ValidationError):
-        UserService.create_user_with_role(
+        UserService.create_user(
             email=fake.email(),
             password=fake.password(),
             role_name="not_existing_role",
         )
 
     with pytest.raises(ValidationError):
-        UserService.create_user_with_role(
+        UserService.create_user(
             email=fake.email(),
             password=fake.password(),
             role_name=DefaultSystemRole.CLIENT,
@@ -42,7 +42,7 @@ def test_create_user_with_role_not_exists():
 def test_create_user_with_role_simple_password():
 
     with pytest.raises(ValidationError):
-        UserService.create_user_with_role(
+        UserService.create_user(
             email=fake.email(),
             password="123456",
             role_name=DefaultSystemRole.CLIENT,
@@ -53,7 +53,7 @@ def test_create_user_with_role_simple_password():
 def test_create_user_with_role_invalid_email():
 
     with pytest.raises(ValidationError):
-        UserService.create_user_with_role(
+        UserService.create_user(
             email="invalid.email.com",
             password=fake.password(),
             role_name=DefaultSystemRole.CLIENT,
@@ -64,7 +64,7 @@ def test_create_user_with_role_invalid_email():
 def test_create_user_with_role_invalid_phone():
 
     with pytest.raises(ValidationError):
-        UserService.create_user_with_role(
+        UserService.create_user(
             email=fake.email(),
             password=fake.password(),
             role_name=DefaultSystemRole.CLIENT,
@@ -75,7 +75,7 @@ def test_create_user_with_role_invalid_phone():
 @pytest.mark.django_db
 def test_create_user_with_roles(setup_system_roles):
 
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="A1b*sDs3434",
         role_name=DefaultSystemRole.CLIENT,
@@ -99,7 +99,7 @@ def test_create_user_with_roles(setup_system_roles):
     ],
 )
 def test_create_user_with_staff_role_sets_is_staff_true(setup_system_roles, role_name):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="A1b*sDs3434",
         role_name=role_name,
@@ -120,7 +120,7 @@ def test_create_user_with_staff_role_sets_is_staff_true(setup_system_roles, role
 def test_create_user_with_non_staff_role_sets_is_staff_false(
     setup_system_roles, role_name
 ):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="A1b*sDs3434",
         role_name=role_name,
@@ -133,14 +133,14 @@ def test_create_user_with_non_staff_role_sets_is_staff_false(
 def test_create_user_with_roles_email_already_exists(setup_system_roles):
     email = fake.email()
 
-    UserService.create_user_with_role(
+    UserService.create_user(
         email=email,
         password=fake.password(),
         role_name=DefaultSystemRole.CLIENT,
     )
 
     with pytest.raises(ValidationError):
-        UserService.create_user_with_role(
+        UserService.create_user(
             email=email,
             password=fake.password(),
             role_name=DefaultSystemRole.CLIENT,
@@ -150,7 +150,7 @@ def test_create_user_with_roles_email_already_exists(setup_system_roles):
 @pytest.mark.django_db
 def test_create_user_with_roles_phone_already_exists(setup_system_roles):
 
-    UserService.create_user_with_role(
+    UserService.create_user(
         email=fake.email(),
         password=fake.password(),
         role_name=DefaultSystemRole.CLIENT,
@@ -158,7 +158,7 @@ def test_create_user_with_roles_phone_already_exists(setup_system_roles):
     )
 
     with pytest.raises(ValidationError):
-        UserService.create_user_with_role(
+        UserService.create_user(
             email=fake.email(),
             password=fake.password(),
             role_name=DefaultSystemRole.CLIENT,
@@ -168,7 +168,7 @@ def test_create_user_with_roles_phone_already_exists(setup_system_roles):
 
 @pytest.mark.django_db
 def test_create_user_set_superuser_from_role(setup_system_roles):
-    user = UserService.create_user_with_role(
+    user = UserService.create_user(
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.ADMIN,
@@ -180,7 +180,7 @@ def test_create_user_set_superuser_from_role(setup_system_roles):
 @pytest.mark.django_db
 def test_create_superuser_deactivated(setup_system_roles):
     with pytest.raises(ValidationError):
-        UserService.create_user_with_role(
+        UserService.create_user(
             email=fake.email(),
             password="Str0ngPass!123",
             role_name=DefaultSystemRole.ADMIN,

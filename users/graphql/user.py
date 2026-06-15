@@ -118,7 +118,7 @@ class CreateUser(graphene.Mutation):
     @permission_required(User, ["add"])
     def mutate(self, info, input: CreateUserInput):
         try:
-            user = UserService.create_user_with_role(
+            user = UserService.create_user(
                 email=input.email.lower(),
                 password=input.password,
                 role_name=input.role_name,
