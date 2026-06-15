@@ -133,12 +133,6 @@ class UserService:
                 update_fields.append("role")
                 role_updated = True
 
-        if branch_id is not None or role_name != DefaultSystemRole.BRANCH_OPERATOR:
-            branch = UserService.validate_branch(branch_id, role_name)
-            if user.branch != branch:
-                user.branch = branch
-                update_fields.append("branch")
-
         email = extra_fields.get("email")
         if email is not None:
             validate_email(email)
@@ -168,6 +162,11 @@ class UserService:
         if user.is_superuser != is_superuser:
             user.is_superuser = is_superuser
             update_fields.append("is_superuser")
+
+        branch = UserService.validate_branch(branch_id, role_name)
+        if user.branch != branch:
+            user.branch = branch
+            update_fields.append("branch")
 
         if update_fields:
             excluded_fields = [

@@ -130,7 +130,7 @@ def test_update_user_sets_staff_true_for_staff_role(
         variables={
             "input": {
                 "id": str(user.id),
-                "roleName": DefaultSystemRole.BRANCH_OPERATOR.value,
+                "roleName": DefaultSystemRole.ADMIN.value,
             }
         },
     ).json()
@@ -139,6 +139,6 @@ def test_update_user_sets_staff_true_for_staff_role(
 
     assert result["data"]["updateUser"]["user"]["isStaff"] is True
     assert result["data"]["updateUser"]["user"]["role"] == {
-        "name": DefaultSystemRole.BRANCH_OPERATOR.value
+        "name": DefaultSystemRole.ADMIN.value
     }
     assert user.is_staff is True

@@ -84,15 +84,25 @@ def test_update_user_role_and_groups(setup_system_roles):
     ],
 )
 def test_update_user_with_staff_role_sets_is_staff_true(setup_system_roles, role_name):
+
+    branch = BranchService.create_branch(
+        name=fake.word(), address=fake.address(), is_active=True
+    )
+
     user = UserService.create_user(
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
     )
 
-    updated_user = UserService.update_user(user, role_name=role_name)
+    updated_user = UserService.update_user(
+        user, role_name=role_name, branch_id=branch.id
+    )
 
     assert updated_user.is_staff is True
+
+    if role_name == DefaultSystemRole.BRANCH_OPERATOR:
+        assert updated_user.branch
 
 
 @pytest.mark.django_db
