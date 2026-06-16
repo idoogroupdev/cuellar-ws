@@ -47,6 +47,7 @@ def test_create_user_with_role_simple_password():
             email=fake.email(),
             password="123456",
             role_name=DefaultSystemRole.CLIENT,
+            phone="+5356989898",
         )
 
 
@@ -58,6 +59,7 @@ def test_create_user_with_role_invalid_email():
             email="invalid.email.com",
             password=fake.password(),
             role_name=DefaultSystemRole.CLIENT,
+            phone="+5356989898",
         )
 
 
@@ -132,6 +134,7 @@ def test_create_user_with_non_staff_role_sets_is_staff_false(
         email=fake.email(),
         password="A1b*sDs3434",
         role_name=role_name,
+        phone="+5356989898",
     )
 
     assert user.is_staff is False
@@ -143,8 +146,9 @@ def test_create_user_with_roles_email_already_exists(setup_system_roles):
 
     UserService.create_user(
         email=email,
-        password=fake.password(),
+        password="A1b*sDs3434",
         role_name=DefaultSystemRole.CLIENT,
+        phone="+5356989898",
     )
 
     with pytest.raises(ValidationError):
@@ -152,6 +156,7 @@ def test_create_user_with_roles_email_already_exists(setup_system_roles):
             email=email,
             password=fake.password(),
             role_name=DefaultSystemRole.CLIENT,
+            phone="+5356989898",
         )
 
 
@@ -160,7 +165,7 @@ def test_create_user_with_roles_phone_already_exists(setup_system_roles):
 
     UserService.create_user(
         email=fake.email(),
-        password=fake.password(),
+        password="123456Dfddfe*",
         role_name=DefaultSystemRole.CLIENT,
         phone="+5356734300",
     )
@@ -168,7 +173,7 @@ def test_create_user_with_roles_phone_already_exists(setup_system_roles):
     with pytest.raises(ValidationError):
         UserService.create_user(
             email=fake.email(),
-            password=fake.password(),
+            password="123456Dfddfe*",
             role_name=DefaultSystemRole.CLIENT,
             phone="+5356734300",
         )

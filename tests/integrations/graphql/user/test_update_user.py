@@ -88,6 +88,7 @@ def test_update_user_sets_staff_false_for_non_staff_role(
     client_query, client, setup_system_roles
 ):
     client_role = Role.objects.get(name=DefaultSystemRole.CLIENT)
+
     user = User.objects.create_user(
         username="target",
         email="target@example.com",
@@ -95,6 +96,7 @@ def test_update_user_sets_staff_false_for_non_staff_role(
         is_staff=True,
         is_verified=True,
         role=client_role,
+        phone="+5356989898",
     )
     client.force_login(create_admin_user())
 

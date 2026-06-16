@@ -16,6 +16,7 @@ def test_update_user_with_role_not_exists(setup_system_roles):
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
+        phone="+5356989898",
     )
 
     with pytest.raises(ValidationError):
@@ -28,6 +29,7 @@ def test_update_user_with_simple_password(setup_system_roles):
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
+        phone="+5356989898",
     )
 
     with pytest.raises(ValidationError):
@@ -40,6 +42,7 @@ def test_update_user_with_invalid_email(setup_system_roles):
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
+        phone="+5356989898",
     )
 
     with pytest.raises(ValidationError):
@@ -52,6 +55,7 @@ def test_update_user_with_invalid_phone(setup_system_roles):
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
+        phone="+5356989898",
     )
 
     with pytest.raises(ValidationError):
@@ -64,6 +68,7 @@ def test_update_user_role_and_groups(setup_system_roles):
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
+        phone="+5356989898",
     )
 
     updated_user = UserService.update_user(user, role_name=DefaultSystemRole.ADMIN)
@@ -93,6 +98,7 @@ def test_update_user_with_staff_role_sets_is_staff_true(setup_system_roles, role
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
+        phone="+5356989898",
     )
 
     updated_user = UserService.update_user(
@@ -123,7 +129,9 @@ def test_update_user_with_non_staff_role_sets_is_staff_false(
         role_name=DefaultSystemRole.ADMIN,
     )
 
-    updated_user = UserService.update_user(user, role_name=role_name)
+    updated_user = UserService.update_user(
+        user, role_name=role_name, phone="+5356989898"
+    )
 
     assert updated_user.is_staff is False
 
@@ -135,6 +143,7 @@ def test_update_user_password_and_extra_fields(setup_system_roles):
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
         first_name="Old",
+        phone="+5356989898",
     )
 
     updated_user = UserService.update_user(
@@ -153,6 +162,7 @@ def test_update_user_field_not_nullable(setup_system_roles):
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
+        phone="+5356989898",
     )
 
     UserService.update_user(user, last_name=None)
@@ -165,6 +175,7 @@ def test_update_user_field_not_overrides(setup_system_roles):
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
         first_name="Name",
+        phone="+5356989898",
     )
 
     user = UserService.update_user(user, first_name=None)
@@ -179,6 +190,7 @@ def test_update_user_boolean_field_none(setup_system_roles):
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
         first_name="Name",
+        phone="+5356989898",
     )
 
     user = UserService.update_user(user, is_active=None)
@@ -192,6 +204,7 @@ def test_update_user_set_superuser_from_role(setup_system_roles):
         email=fake.email(),
         password="Str0ngPass!123",
         role_name=DefaultSystemRole.CLIENT,
+        phone="+5356989898",
     )
 
     assert user.is_superuser is False
