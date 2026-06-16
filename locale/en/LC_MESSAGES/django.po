@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-15 11:06+0000\n"
+"POT-Creation-Date: 2026-06-16 17:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,6 +104,10 @@ msgstr ""
 
 #: users/models.py:76
 msgid "A superuser cannot be deactivated."
+msgstr ""
+
+#: users/models.py:80
+msgid "A client must have a phone number."
 msgstr ""
 
 #: users/services/auth_service.py:60

@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
 from branches.models import Branch
-from roles.models import Role
+from roles.models import DefaultSystemRole, Role
 from utils.functions.generate_unique_code import generate_unique_code
 from utils.validators import validate_file_size
 
@@ -75,6 +75,9 @@ class User(AbstractUser):
             raise ValidationError(
                 {"is_active": _("A superuser cannot be deactivated.")}
             )
+
+        if self.role and self.role.name == DefaultSystemRole.CLIENT and not self.phone:
+            raise ValidationError({"phone": _("A client must have a phone number.")})
 
 
 def default_expiration_date():
