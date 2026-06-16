@@ -162,15 +162,10 @@ class UpdateUser(graphene.Mutation):
             raise ValidationGraphQLError(fields={"id": [message]}, message=message)
 
         try:
-            user = UserService.update_user(
-                user,
-                role_name=input.role_name,
-                first_name=input.first_name,
-                last_name=input.last_name,
-                phone=input.phone,
-                is_active=input.is_active,
-                branch_id=input.branch_id,
-            )
+            kwargs = dict(input.items())
+            kwargs.pop("id", None)
+
+            user = UserService.update_user(user, **kwargs)
         except ValidationError as exc:
             raise ValidationGraphQLError(fields=exc.message_dict)
 
