@@ -58,24 +58,6 @@ class Command(BaseCommand):
         self.setup_operator()
         self.setup_branch_operator()
 
-    def setup_client(self):
-
-        roles = {DefaultSystemRole.CLIENT.value: {}}
-
-        create_permission_groups(roles)
-
-    def setup_salesperson(self):
-
-        roles = {DefaultSystemRole.SALESPERSON.value: {}}
-
-        create_permission_groups(roles)
-
-    def setup_delivery_driver(self):
-
-        roles = {DefaultSystemRole.DELIVERY_DRIVER.value: {}}
-
-        create_permission_groups(roles)
-
     def setup_admin(self):
 
         roles = {
@@ -92,10 +74,29 @@ class Command(BaseCommand):
 
         roles = {
             DefaultSystemRole.OPERATOR.value: {
+                User: ["add", "view", "change"],
                 Branch: ["add", "view", "change"],
                 BranchHour: self.all_permissions,
             }
         }
+
+        create_permission_groups(roles)
+
+    def setup_client(self):
+
+        roles = {DefaultSystemRole.CLIENT.value: {}}
+
+        create_permission_groups(roles)
+
+    def setup_salesperson(self):
+
+        roles = {DefaultSystemRole.SALESPERSON.value: {}}
+
+        create_permission_groups(roles)
+
+    def setup_delivery_driver(self):
+
+        roles = {DefaultSystemRole.DELIVERY_DRIVER.value: {}}
 
         create_permission_groups(roles)
 
