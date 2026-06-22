@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-16 17:27+0000\n"
+"POT-Creation-Date: 2026-06-22 14:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,6 +108,30 @@ msgstr ""
 
 #: users/models.py:80
 msgid "A client must have a phone number."
+msgstr ""
+
+#: users/models.py:143
+msgid "Earned"
+msgstr ""
+
+#: users/models.py:144
+msgid "Spent"
+msgstr ""
+
+#: users/models.py:145
+msgid "Reserved"
+msgstr ""
+
+#: users/models.py:146
+msgid "Released"
+msgstr ""
+
+#: users/models.py:178
+msgid "Cannot be used with a non-reserved type"
+msgstr ""
+
+#: users/models.py:183
+msgid "Cannot be used with a non-released type"
 msgstr ""
 
 #: users/services/auth_service.py:60

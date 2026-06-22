@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-16 17:27+0000\n"
+"POT-Creation-Date: 2026-06-22 14:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,30 @@ msgstr "Un superusuario no puede ser desactivado"
 #: users/models.py:80
 msgid "A client must have a phone number."
 msgstr "Un cliente debe tener un número de teléfono."
+
+#: users/models.py:143
+msgid "Earned"
+msgstr "Ganado"
+
+#: users/models.py:144
+msgid "Spent"
+msgstr "Gastado"
+
+#: users/models.py:145
+msgid "Reserved"
+msgstr "Reservado"
+
+#: users/models.py:146
+msgid "Released"
+msgstr "Liberado"
+
+#: users/models.py:178
+msgid "Cannot be used with a non-reserved type"
+msgstr "No se puede utilizar con un tipo no reservado"
+
+#: users/models.py:183
+msgid "Cannot be used with a non-released type"
+msgstr "No se puede utilizar con un tipo no liberado"
 
 #: users/services/auth_service.py:60
 msgid "You cannot request a auth code for this time"
