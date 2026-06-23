@@ -5,13 +5,15 @@ from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_image_file_extension
 from django.db import models
-from django.db.models import Q
+from django.db.models import Case, DecimalField, F, Q, Sum, When
+from django.db.models.functions import Coalesce
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
 from branches.models import Branch
 from roles.models import DefaultSystemRole, Role
+from utils.constants import DEFAULT_AMOUNT
 from utils.functions.generate_unique_code import generate_unique_code
 from utils.validators import validate_file_size
 
@@ -138,6 +140,38 @@ class RecoverPassword(models.Model):
         return self.code == code
 
 
+class CashbackHistoryQuerySet(models.QuerySet):
+    def _balance_case(self):
+        return Case(
+            When(
+                type__in=[
+                    CashbackHistory.TypeChoices.EARNED,
+                    CashbackHistory.TypeChoices.RELEASED,
+                ],
+                then=F("amount"),
+            ),
+            When(
+                type__in=[
+                    CashbackHistory.TypeChoices.SPENT,
+                    CashbackHistory.TypeChoices.RESERVED,
+                ],
+                then=-F("amount"),
+            ),
+            default=DEFAULT_AMOUNT,
+            output_field=DecimalField(max_digits=10, decimal_places=2),
+        )
+
+    def cashback_balance(self):
+        return self.aggregate(
+            cashback_balance=Coalesce(
+                Sum(
+                    self._balance_case(),
+                ),
+                DEFAULT_AMOUNT,
+            )
+        )["cashback_balance"]
+
+
 class CashbackHistory(models.Model):
     class TypeChoices(models.TextChoices):
         EARNED = "EARNED", _("Earned")
@@ -158,6 +192,8 @@ class CashbackHistory(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = CashbackHistoryQuerySet.as_manager()
 
     class Meta:
         constraints = [
