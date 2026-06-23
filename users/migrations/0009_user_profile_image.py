@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             field=models.ImageField(
                 blank=True,
                 null=True,
-                upload_to=users.models.user.client_profile_image_directory_path,
+                upload_to=users.models.user.user_profile_image_directory_path,
                 validators=[django.core.validators.validate_image_file_extension],
             ),
         ),

@@ -13,9 +13,9 @@ from roles.models import DefaultSystemRole, Role
 from utils.validators import validate_file_size
 
 
-def client_profile_image_directory_path(instance, filename):
+def user_profile_image_directory_path(instance, filename):
     token = secrets.token_urlsafe(10)
-    return f"profile_images/clients/{instance.id}/{token}_{filename}"
+    return f"profile_images/users/{instance.id}/{token}_{filename}"
 
 
 class User(AbstractUser):
@@ -42,7 +42,7 @@ class User(AbstractUser):
         verbose_name=_("phone"), blank=True, null=True, unique=True
     )
     profile_image = models.ImageField(
-        upload_to=client_profile_image_directory_path,
+        upload_to=user_profile_image_directory_path,
         validators=[validate_image_file_extension, validate_file_size],
         blank=True,
         null=True,
