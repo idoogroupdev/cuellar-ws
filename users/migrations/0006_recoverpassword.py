@@ -28,7 +28,9 @@ class Migration(migrations.Migration):
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 (
                     "expires_at",
-                    models.DateTimeField(default=users.models.default_expiration_date),
+                    models.DateTimeField(
+                        default=users.models.security.default_expiration_date
+                    ),
                 ),
                 (
                     "user",

@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
                     "expires_at",
                     models.DateTimeField(
                         blank=True,
-                        default=users.models.default_expiration_date,
+                        default=users.models.security.default_expiration_date,
                         null=True,
                     ),
                 ),
