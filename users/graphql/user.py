@@ -7,7 +7,7 @@ from graphene_django import DjangoObjectType
 from graphene_file_upload.scalars import Upload
 
 from roles.graphql.roles import PermissionNode
-from users.models import User
+from users.models import CashbackHistory, User
 from users.services.user_service import UserService
 from utils.decorators import login_required, permission_required, staff_member_required
 from utils.exceptions import ValidationGraphQLError
@@ -18,6 +18,7 @@ from utils.graphql import BaseConnection, ConnectionField
 class UserNode(DjangoObjectType):
     id = graphene.ID(source="pk", required=True)
     permissions = graphene.List(PermissionNode)
+    cashback_balance = graphene.Decimal()
 
     class Meta:
         model = User
@@ -38,6 +39,9 @@ class UserNode(DjangoObjectType):
 
     def resolve_profile_image(self, info):
         return self.profile_image.url if self.profile_image else None
+
+    def resolve_cashback_balance(self, info):
+        return CashbackHistory.objects.filter(user_id=self.id).cashback_balance()
 
 
 class UserFilter(FullFilterSet):
