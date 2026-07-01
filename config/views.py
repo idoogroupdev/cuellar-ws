@@ -11,3 +11,8 @@ class DownloadSchemaView(View):
             schema_dict,
             headers={"Content-Disposition": 'attachment; filename="schema.json"'},
         )
+
+
+class HealthCheckView(View):
+    def get(self, request, *args, **kwargs):
+        return JsonResponse({"message": "ok"})
