@@ -21,7 +21,7 @@ class BranchHourService:
 
         if not branch_instance:
             raise ValidationError(
-                {"branch": _("Branch not found: %(branch)s") % {"branch": branch}}
+                {"branch_id": _("Branch not found: %(branch)s") % {"branch": branch}}
             )
 
         return branch_instance

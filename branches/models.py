@@ -17,6 +17,9 @@ class Branch(models.Model):
 
     objects = BranchQuerySet.as_manager()
 
+    def __str__(self):
+        return self.name
+
 
 class BranchHourQuerySet(models.QuerySet):
     def with_ordered_by_day_of_week(self):

@@ -2,6 +2,7 @@ import graphene
 from django.core.exceptions import ValidationError
 from graphene_django import DjangoObjectType
 
+from branches.graphql.branch_hour import BranchHourNode
 from branches.models import Branch
 from branches.services.branch_service import BranchService
 from utils.decorators import permission_required, staff_member_required
@@ -11,6 +12,7 @@ from utils.graphql import BaseConnection, ConnectionField
 
 class BranchNode(DjangoObjectType):
     id = graphene.ID(source="pk", required=True)
+    branch_hours = graphene.List(BranchHourNode)
 
     class Meta:
         model = Branch
@@ -18,6 +20,9 @@ class BranchNode(DjangoObjectType):
         filter_fields = ["is_active"]
         interfaces = (graphene.relay.Node,)
         connection_class = BaseConnection
+
+    def resolve_branch_hours(self, info, **kwargs):
+        return self.branch_hours.all()
 
 
 class CreateBranchInput(graphene.InputObjectType):
