@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-22 14:05+0000\n"
+"POT-Creation-Date: 2026-07-02 21:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,11 +62,25 @@ msgstr ""
 msgid "branches hours"
 msgstr ""
 
+#: branches/services/branch_hour_service.py:24
+#: users/services/user_service.py:64
+#, python-format
+msgid "Branch not found: %(branch)s"
+msgstr ""
+
+#: branches/services/branch_hour_service.py:43
+msgid "Invalid day of week"
+msgstr ""
+
+#: branches/services/branch_hour_service.py:46
+msgid "Day of week is duplicated"
+msgstr ""
+
 #: config/middleware.py:27
 msgid "Your session has been closed."
 msgstr ""
 
-#: roles/models.py:18
+#: roles/models.py:30
 msgid "name"
 msgstr ""
 
@@ -82,56 +96,56 @@ msgstr ""
 msgid "Code sent"
 msgstr ""
 
-#: users/graphql/user.py:161
+#: users/graphql/user.py:167
 msgid "User not found."
 msgstr ""
 
-#: users/models.py:26
-msgid "None"
-msgstr ""
-
-#: users/models.py:29
-msgid "Waiting for new password"
-msgstr ""
-
-#: users/models.py:32
-msgid "email address"
-msgstr ""
-
-#: users/models.py:45
-msgid "phone"
-msgstr ""
-
-#: users/models.py:76
-msgid "A superuser cannot be deactivated."
-msgstr ""
-
-#: users/models.py:80
-msgid "A client must have a phone number."
-msgstr ""
-
-#: users/models.py:143
+#: users/models/cashback.py:45
 msgid "Earned"
 msgstr ""
 
-#: users/models.py:144
+#: users/models/cashback.py:46
 msgid "Spent"
 msgstr ""
 
-#: users/models.py:145
+#: users/models/cashback.py:47
 msgid "Reserved"
 msgstr ""
 
-#: users/models.py:146
+#: users/models/cashback.py:48
 msgid "Released"
 msgstr ""
 
-#: users/models.py:178
+#: users/models/cashback.py:82
 msgid "Cannot be used with a non-reserved type"
 msgstr ""
 
-#: users/models.py:183
+#: users/models/cashback.py:87
 msgid "Cannot be used with a non-released type"
+msgstr ""
+
+#: users/models/user.py:23
+msgid "None"
+msgstr ""
+
+#: users/models/user.py:26
+msgid "Waiting for new password"
+msgstr ""
+
+#: users/models/user.py:29
+msgid "email address"
+msgstr ""
+
+#: users/models/user.py:42
+msgid "phone"
+msgstr ""
+
+#: users/models/user.py:73
+msgid "A superuser cannot be deactivated."
+msgstr ""
+
+#: users/models/user.py:77
+msgid "A client must have a phone number."
 msgstr ""
 
 #: users/services/auth_service.py:60
@@ -175,11 +189,6 @@ msgstr ""
 
 #: users/services/user_service.py:55
 msgid "Branch is required"
-msgstr ""
-
-#: users/services/user_service.py:64
-#, python-format
-msgid "Branch not found: %(branch)s"
 msgstr ""
 
 #: users/services/user_service.py:69
