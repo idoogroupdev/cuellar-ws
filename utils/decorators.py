@@ -3,6 +3,7 @@ from typing import Literal, Union
 from django.db.models import Model
 from graphql_jwt.decorators import user_passes_test
 
+from roles.models import DefaultSystemRoleLiteral
 from utils.exceptions import PermissionDenied, Unauthorized, UserNotVerified
 
 
@@ -11,6 +12,7 @@ def permission_required(
     actions: Union[
         Literal["view"], Literal["add"], Literal["change"], Literal["delete"]
     ],
+    roles: Union[DefaultSystemRoleLiteral] = None,
 ):
     """Check if the user has the required permissions"""
 
@@ -33,7 +35,9 @@ def permission_required(
 
         has_perms = user.has_perms(perms)
 
-        return has_perms
+        has_roles = user.has_roles(roles) if roles else True
+
+        return has_perms and has_roles
 
     return user_passes_test(check_perms, exc=PermissionDenied)
 

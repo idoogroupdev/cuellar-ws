@@ -103,3 +103,19 @@ def test_permission_required_raises_user_not_verified():
 
     with pytest.raises(UserNotVerified):
         resolver(None, info)
+
+
+@pytest.mark.django_db
+def test_permission_required_raises_permission_denied_when_user_has_no_role():
+    user = Mock(is_authenticated=True)
+    user.has_roles.return_value = False
+    user.has_perms.return_value = True
+    context = Mock(user=user)
+    info = build_info(context)
+
+    @permission_required(User, "view", ["ADMIN"])
+    def resolver(root, info):
+        return "ok"
+
+    with pytest.raises(PermissionDenied):
+        resolver(None, info)
