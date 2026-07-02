@@ -1,3 +1,5 @@
+from typing import Literal
+
 from django.contrib.auth.models import Group
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -10,6 +12,16 @@ class DefaultSystemRole(models.TextChoices):
     ADMIN = "ADMIN"
     OPERATOR = "OPERATOR"
     BRANCH_OPERATOR = "BRANCH_OPERATOR"
+
+
+DefaultSystemRoleLiteral = Literal[
+    "CLIENT",
+    "SALESPERSON",
+    "DELIVERY_DRIVER",
+    "ADMIN",
+    "OPERATOR",
+    "BRANCH_OPERATOR",
+]
 
 
 class Role(models.Model):
