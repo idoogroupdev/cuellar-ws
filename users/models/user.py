@@ -76,6 +76,9 @@ class User(AbstractUser):
         if self.role and self.role.name == DefaultSystemRole.CLIENT and not self.phone:
             raise ValidationError({"phone": _("A client must have a phone number.")})
 
+    def has_roles(self, roles: list[str]):
+        return self.role and self.role.name in roles
+
 
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses")
