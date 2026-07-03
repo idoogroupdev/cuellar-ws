@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Case, IntegerField, When
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
@@ -36,6 +37,17 @@ class BranchHourQuerySet(models.QuerySet):
                 output_field=IntegerField(),
             )
         ).order_by("day_order")
+
+    def open_now(self):
+        now = timezone.now()
+        current_time = now.time()
+        day_of_week = now.strftime("%A").upper()
+
+        return self.filter(
+            day_of_week=day_of_week,
+            from_hour__lte=current_time,
+            to_hour__gte=current_time,
+        )
 
 
 class BranchHour(models.Model):
