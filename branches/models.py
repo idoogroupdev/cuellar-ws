@@ -14,6 +14,7 @@ class Branch(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_pickup_enabled = models.BooleanField(default=True)
 
     objects = BranchQuerySet.as_manager()
 
