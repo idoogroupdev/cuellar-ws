@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Case, IntegerField, When
+from django.db.models import Case, Exists, IntegerField, OuterRef, When
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -7,6 +7,15 @@ from django.utils.translation import gettext_lazy as _
 class BranchQuerySet(models.QuerySet):
     def active(self):
         return self.filter(is_active=True)
+
+    def with_pickup_enabled(self):
+        return (
+            self.active()
+            .filter(
+                is_pickup_enabled=True,
+            )
+            .filter(Exists(BranchHour.objects.open_now().filter(branch=OuterRef("pk"))))
+        )
 
 
 class Branch(models.Model):
