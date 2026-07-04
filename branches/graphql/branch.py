@@ -32,6 +32,7 @@ class CreateBranchInput(graphene.InputObjectType):
     name = graphene.String(required=True)
     address = graphene.String()
     is_active = graphene.Boolean(default_value=True)
+    is_pickup_enabled = graphene.Boolean(default_value=True)
 
 
 class CreateBranch(graphene.Mutation):
@@ -48,6 +49,7 @@ class CreateBranch(graphene.Mutation):
                 name=input.name,
                 address=input.address,
                 is_active=input.is_active,
+                is_pickup_enabled=input.is_pickup_enabled,
             )
         except ValidationError as exc:
             raise ValidationGraphQLError(fields=exc.message_dict)
