@@ -1,35 +1,26 @@
 import pytest
 
+from branches.services.branch_service import BranchService
 from roles.models import DefaultSystemRole, Role
 from users.models import User
 
 query = """
-mutation MyMutation ($input: CreateBranchInput!) {
-  createBranch(input: $input) {
+mutation UpdateBranch($input: UpdateBranchInput!) {
+  updateBranch(input: $input) {
     branch {
       address
       id
       isActive
-      name
       isPickupEnabled
+      name
     }
   }
 }
 """
 
 
-def build_input(**overrides):
-    data = {
-        "name": "Test Branch",
-        "address": "Test Address",
-        "isActive": True,
-    }
-    data.update(overrides)
-    return data
-
-
 @pytest.mark.django_db
-def test_create_branch_permission_denied_when_user_is_not_staff(client_query, client):
+def test_update_branch_permission_denied_when_user_is_not_staff(client_query, client):
     user = User.objects.create_user(
         username="client",
         email="client@example.com",
@@ -38,13 +29,16 @@ def test_create_branch_permission_denied_when_user_is_not_staff(client_query, cl
     )
     client.force_login(user)
 
-    result = client_query(query, variables={"input": build_input()}).json()
+    result = client_query(
+        query,
+        variables={"input": {"id": str(user.id), "name": "Test Branch"}},
+    ).json()
 
     assert result["errors"][0]["extensions"] == {"code": "PERMISSION_DENIED"}
 
 
 @pytest.mark.django_db
-def test_create_branch_permission_denied_when_staff_lacks_add_branch_permission(
+def test_update_branch_permission_denied_when_staff_lacks_change_branch_permission(
     client_query, client
 ):
     user = User.objects.create_user(
@@ -56,13 +50,16 @@ def test_create_branch_permission_denied_when_staff_lacks_add_branch_permission(
     )
     client.force_login(user)
 
-    result = client_query(query, variables={"input": build_input()}).json()
+    result = client_query(
+        query,
+        variables={"input": {"id": str(user.id), "name": "Test Branch"}},
+    ).json()
 
     assert result["errors"][0]["extensions"] == {"code": "PERMISSION_DENIED"}
 
 
 @pytest.mark.django_db
-def test_create_branch_success(client_query, client, setup_system_roles):
+def test_update_branch_success(client_query, client, setup_system_roles):
     admin_role = Role.objects.get(name=DefaultSystemRole.ADMIN)
     user = User.objects.create_user(
         username="admin",
@@ -76,19 +73,32 @@ def test_create_branch_success(client_query, client, setup_system_roles):
 
     client.force_login(user)
 
-    result = client_query(query, variables={"input": build_input()}).json()
+    branch = BranchService.create_branch(name="Test Branch")
 
-    assert result["data"]["createBranch"]["branch"] == {
+    result = client_query(
+        query,
+        variables={
+            "input": {
+                "id": str(branch.id),
+                "name": "Test Branch",
+                "address": "Test Address",
+                "isActive": False,
+                "isPickupEnabled": False,
+            }
+        },
+    ).json()
+
+    assert result["data"]["updateBranch"]["branch"] == {
         "address": "Test Address",
-        "id": str(result["data"]["createBranch"]["branch"]["id"]),
-        "isActive": True,
+        "id": str(result["data"]["updateBranch"]["branch"]["id"]),
+        "isActive": False,
         "name": "Test Branch",
-        "isPickupEnabled": True,
+        "isPickupEnabled": False,
     }
 
 
 @pytest.mark.django_db
-def test_create_branch_unauthorized(client_query):
-    result = client_query(query, variables={"input": build_input()}).json()
+def test_update_branch_unauthorized(client_query):
+    result = client_query(query, variables={"input": {"id": 1}}).json()
 
     assert result["errors"][0]["extensions"] == {"code": "UNAUTHORIZED"}

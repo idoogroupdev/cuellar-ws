@@ -1,5 +1,6 @@
 import graphene
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext as _
 from graphene_django import DjangoObjectType
 
 from branches.graphql.branch_hour import BranchHourNode
@@ -16,7 +17,7 @@ class BranchNode(DjangoObjectType):
 
     class Meta:
         model = Branch
-        exclude = ("created_at", "updated_at")
+        exclude = ("created_at", "updated_at", "users")
         filter_fields = {
             "is_active": ["exact"],
             "name": ["icontains"],
@@ -57,6 +58,40 @@ class CreateBranch(graphene.Mutation):
         return CreateBranch(branch=branch)
 
 
+class UpdateBranchInput(graphene.InputObjectType):
+    id = graphene.ID(required=True)
+    name = graphene.String(required=False)
+    address = graphene.String(required=False)
+    is_active = graphene.Boolean(required=False)
+    is_pickup_enabled = graphene.Boolean(required=False)
+
+
+class UpdateBranch(graphene.Mutation):
+    branch = graphene.Field(BranchNode)
+
+    class Arguments:
+        input = UpdateBranchInput(required=True)
+
+    @staff_member_required
+    @permission_required(Branch, ["change"])
+    def mutate(self, info, input: UpdateBranchInput):
+        branch = Branch.objects.filter(pk=input.id).first()
+
+        if not branch:
+            message = _("Branch not found.")
+            raise ValidationGraphQLError(fields={"id": [message]}, message=message)
+
+        try:
+            kwargs = dict(input.items())
+            kwargs.pop("id", None)
+
+            branch = BranchService.update_branch(branch, **kwargs)
+        except ValidationError as exc:
+            raise ValidationGraphQLError(fields=exc.message_dict)
+
+        return UpdateBranch(branch=branch)
+
+
 class Query(graphene.ObjectType):
     all_branches = ConnectionField(BranchNode)
 
@@ -68,6 +103,7 @@ class Query(graphene.ObjectType):
 
 class Mutation(graphene.ObjectType):
     create_branch = CreateBranch.Field()
+    update_branch = UpdateBranch.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
