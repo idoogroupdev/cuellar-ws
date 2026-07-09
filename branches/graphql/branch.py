@@ -26,7 +26,7 @@ class BranchNode(DjangoObjectType):
         connection_class = BaseConnection
 
     def resolve_branch_hours(self, info, **kwargs):
-        return self.branch_hours.all()
+        return self.branch_hours.with_ordered_by_day_of_week().all()
 
 
 class CreateBranchInput(graphene.InputObjectType):
@@ -98,7 +98,7 @@ class Query(graphene.ObjectType):
     @staff_member_required
     @permission_required(Branch, ["view"])
     def resolve_all_branches(self, info, **kwargs):
-        return Branch.objects.all()
+        return Branch.objects.order_by("-id").all()
 
 
 class Mutation(graphene.ObjectType):
