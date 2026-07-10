@@ -13,9 +13,16 @@ class BranchService:
         **extra_fields,
     ) -> Branch:
 
-        return Branch.objects.create(
-            name=name, address=address, is_active=is_active, **extra_fields
+        branch = Branch(
+            name=name,
+            address=address,
+            is_active=is_active,
+            **extra_fields,
         )
+        branch.full_clean()
+        branch.save()
+
+        return branch
 
     @staticmethod
     def update_branch(
