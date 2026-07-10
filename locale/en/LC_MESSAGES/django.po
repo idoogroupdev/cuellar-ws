@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-02 21:55+0000\n"
+"POT-Creation-Date: 2026-07-10 12:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,47 +18,51 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: branches/models.py:39
-msgid "Sunday"
-msgstr ""
-
-#: branches/models.py:40
-msgid "Monday"
-msgstr ""
-
-#: branches/models.py:41
-msgid "Tuesday"
-msgstr ""
-
-#: branches/models.py:42
-msgid "Wednesday"
-msgstr ""
-
-#: branches/models.py:43
-msgid "Thursday"
-msgstr ""
-
-#: branches/models.py:44
-msgid "Friday"
-msgstr ""
-
-#: branches/models.py:45
-msgid "Saturday"
-msgstr ""
-
-#: branches/models.py:51
-msgid "branch"
-msgstr ""
-
-#: branches/models.py:54
-msgid "day of week"
-msgstr ""
-
-#: branches/models.py:63
-msgid "branch hour"
+#: branches/graphql/branch.py:81
+msgid "Branch not found."
 msgstr ""
 
 #: branches/models.py:64
+msgid "Sunday"
+msgstr ""
+
+#: branches/models.py:65
+msgid "Monday"
+msgstr ""
+
+#: branches/models.py:66
+msgid "Tuesday"
+msgstr ""
+
+#: branches/models.py:67
+msgid "Wednesday"
+msgstr ""
+
+#: branches/models.py:68
+msgid "Thursday"
+msgstr ""
+
+#: branches/models.py:69
+msgid "Friday"
+msgstr ""
+
+#: branches/models.py:70
+msgid "Saturday"
+msgstr ""
+
+#: branches/models.py:76
+msgid "branch"
+msgstr ""
+
+#: branches/models.py:79
+msgid "day of week"
+msgstr ""
+
+#: branches/models.py:88
+msgid "branch hour"
+msgstr ""
+
+#: branches/models.py:89
 msgid "branches hours"
 msgstr ""
 
