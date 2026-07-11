@@ -2,7 +2,7 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand
 
-from branches.models import Branch, BranchHour
+from branches.models import Branch, BranchHour, Category
 from roles.models import DefaultSystemRole, Role
 from users.models import User
 
@@ -65,6 +65,7 @@ class Command(BaseCommand):
                 User: ["add", "view", "change"],
                 Branch: ["add", "view", "change"],
                 BranchHour: self.all_permissions,
+                Category: self.all_permissions,
             }
         }
 
@@ -77,6 +78,7 @@ class Command(BaseCommand):
                 User: ["add", "view", "change"],
                 Branch: ["add", "view", "change"],
                 BranchHour: self.all_permissions,
+                Category: self.all_permissions,
             }
         }
 
