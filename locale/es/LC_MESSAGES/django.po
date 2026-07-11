@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 12:09+0000\n"
+"POT-Creation-Date: 2026-07-11 21:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,49 +22,61 @@ msgstr ""
 msgid "Branch not found."
 msgstr "Sucursal no encontrada."
 
-#: branches/models.py:64
+#: branches/models/branch.py:64
 msgid "Sunday"
 msgstr "Domingo"
 
-#: branches/models.py:65
+#: branches/models/branch.py:65
 msgid "Monday"
 msgstr "Lunes"
 
-#: branches/models.py:66
+#: branches/models/branch.py:66
 msgid "Tuesday"
 msgstr "Martes"
 
-#: branches/models.py:67
+#: branches/models/branch.py:67
 msgid "Wednesday"
 msgstr "Miércoles"
 
-#: branches/models.py:68
+#: branches/models/branch.py:68
 msgid "Thursday"
 msgstr "Jueves"
 
-#: branches/models.py:69
+#: branches/models/branch.py:69
 msgid "Friday"
 msgstr "Viernes"
 
-#: branches/models.py:70
+#: branches/models/branch.py:70
 msgid "Saturday"
 msgstr "Sábado"
 
-#: branches/models.py:76
+#: branches/models/branch.py:76
 msgid "branch"
 msgstr "sucursal"
 
-#: branches/models.py:79
+#: branches/models/branch.py:79
 msgid "day of week"
 msgstr "día de la semana"
 
-#: branches/models.py:88
+#: branches/models/branch.py:88
 msgid "branch hour"
 msgstr "horario de la sucursal"
 
-#: branches/models.py:89
+#: branches/models/branch.py:89
 msgid "branches hours"
 msgstr "horarios de las sucursales"
+
+#: branches/models/category.py:11 roles/models.py:30
+msgid "name"
+msgstr "nombre"
+
+#: branches/models/category.py:18
+msgid "category"
+msgstr "categoría"
+
+#: branches/models/category.py:19
+msgid "categories"
+msgstr "categorías"
 
 #: branches/services/branch_hour_service.py:24
 #: users/services/user_service.py:64
@@ -80,13 +92,13 @@ msgstr "Día de la semana no válido"
 msgid "Day of week is duplicated"
 msgstr "Día de la semana está duplicado"
 
+#: branches/services/category_service.py:48
+msgid "One or more categories do not exist."
+msgstr "Una o más categorías no existen."
+
 #: config/middleware.py:27
 msgid "Your session has been closed."
 msgstr "Su sesión ha sido cerrada."
-
-#: roles/models.py:30
-msgid "name"
-msgstr "nombre"
 
 #: services/mail_service.py:15
 msgid "Verification code"
@@ -216,7 +228,7 @@ msgstr "Su cuenta no está verificada."
 msgid "Validation error"
 msgstr "Error de validación"
 
-#: utils/exceptions.py:61
+#: utils/exceptions.py:74
 #, python-format
 msgid "Too many attempts. Try again in %(count)s seconds."
 msgstr "Demasiados intentos. Vuelva a intentarlo en %(count)s segundos."

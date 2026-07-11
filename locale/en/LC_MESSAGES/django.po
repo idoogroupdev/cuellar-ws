@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 12:09+0000\n"
+"POT-Creation-Date: 2026-07-11 21:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,48 +22,60 @@ msgstr ""
 msgid "Branch not found."
 msgstr ""
 
-#: branches/models.py:64
+#: branches/models/branch.py:64
 msgid "Sunday"
 msgstr ""
 
-#: branches/models.py:65
+#: branches/models/branch.py:65
 msgid "Monday"
 msgstr ""
 
-#: branches/models.py:66
+#: branches/models/branch.py:66
 msgid "Tuesday"
 msgstr ""
 
-#: branches/models.py:67
+#: branches/models/branch.py:67
 msgid "Wednesday"
 msgstr ""
 
-#: branches/models.py:68
+#: branches/models/branch.py:68
 msgid "Thursday"
 msgstr ""
 
-#: branches/models.py:69
+#: branches/models/branch.py:69
 msgid "Friday"
 msgstr ""
 
-#: branches/models.py:70
+#: branches/models/branch.py:70
 msgid "Saturday"
 msgstr ""
 
-#: branches/models.py:76
+#: branches/models/branch.py:76
 msgid "branch"
 msgstr ""
 
-#: branches/models.py:79
+#: branches/models/branch.py:79
 msgid "day of week"
 msgstr ""
 
-#: branches/models.py:88
+#: branches/models/branch.py:88
 msgid "branch hour"
 msgstr ""
 
-#: branches/models.py:89
+#: branches/models/branch.py:89
 msgid "branches hours"
+msgstr ""
+
+#: branches/models/category.py:11 roles/models.py:30
+msgid "name"
+msgstr ""
+
+#: branches/models/category.py:18
+msgid "category"
+msgstr ""
+
+#: branches/models/category.py:19
+msgid "categories"
 msgstr ""
 
 #: branches/services/branch_hour_service.py:24
@@ -80,12 +92,12 @@ msgstr ""
 msgid "Day of week is duplicated"
 msgstr ""
 
-#: config/middleware.py:27
-msgid "Your session has been closed."
+#: branches/services/category_service.py:48
+msgid "One or more categories do not exist."
 msgstr ""
 
-#: roles/models.py:30
-msgid "name"
+#: config/middleware.py:27
+msgid "Your session has been closed."
 msgstr ""
 
 #: services/mail_service.py:15
@@ -216,7 +228,7 @@ msgstr ""
 msgid "Validation error"
 msgstr ""
 
-#: utils/exceptions.py:61
+#: utils/exceptions.py:74
 #, python-format
 msgid "Too many attempts. Try again in %(count)s seconds."
 msgstr ""
