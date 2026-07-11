@@ -1,3 +1,6 @@
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+
 from branches.models import Category
 from utils.functions.normalize_nullable_field_value import (
     normalize_nullable_field_value,
@@ -32,3 +35,25 @@ class CategoryService:
             category.save(update_fields=update_fields)
 
         return category
+
+    @staticmethod
+    def reorder(category_ids: list[int]):
+
+        categories = {
+            category.id: category
+            for category in Category.objects.filter(id__in=category_ids)
+        }
+
+        if len(categories) != len(category_ids):
+            raise ValidationError({"ids": _("One or more categories do not exist.")})
+
+        updates = []
+
+        for index, category_id in enumerate(category_ids):
+            category = categories[category_id]
+            if category.sort_order != index:
+                category.sort_order = index
+                updates.append(category)
+
+        if updates:
+            Category.objects.bulk_update(updates, ["sort_order"])
