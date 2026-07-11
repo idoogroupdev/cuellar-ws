@@ -48,6 +48,10 @@ class ValidationGraphQLError(GraphQLError):
         fields: dict,
         message=None,
     ):
+
+        if message is None:
+            message = self._get_first_error(fields)
+
         super().__init__(
             message or self.message,
             extensions={
@@ -55,6 +59,15 @@ class ValidationGraphQLError(GraphQLError):
                 "fields": normalize_keys(fields),
             },
         )
+
+    @classmethod
+    def _get_first_error(cls, fields: dict) -> str:
+        for value in fields.values():
+            if isinstance(value, (list, tuple)) and value:
+                return str(value[0])
+            if value:
+                return str(value)
+        return str(cls.default_message)
 
 
 class TooManyAttempts(GraphQLError):
