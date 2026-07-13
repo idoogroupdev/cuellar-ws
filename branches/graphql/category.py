@@ -111,6 +111,30 @@ class ReorderCategory(graphene.Mutation):
         return ReorderCategory(success=True)
 
 
+class DeleteCategoryInput(graphene.InputObjectType):
+    id = graphene.ID(required=True)
+
+
+class DeleteCategory(graphene.Mutation):
+    success = graphene.Boolean()
+
+    class Arguments:
+        input = DeleteCategoryInput(required=True)
+
+    @staff_member_required
+    @permission_required(Category, "delete")
+    def mutate(self, info, input: DeleteCategoryInput):
+        category = Category.objects.filter(pk=input.id).first()
+
+        if not category:
+            message = _("Category not found.")
+            raise ValidationGraphQLError(fields={"id": [message]}, message=message)
+
+        CategoryService.delete(category)
+
+        return DeleteCategory(success=True)
+
+
 class Query(graphene.ObjectType):
     all_categories = ConnectionField(CategoryNode)
 
@@ -124,6 +148,7 @@ class Mutation(graphene.ObjectType):
     create_category = CreateCategory.Field()
     update_category = UpdateCategory.Field()
     reorder_category = ReorderCategory.Field()
+    delete_category = DeleteCategory.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

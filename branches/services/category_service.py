@@ -57,3 +57,7 @@ class CategoryService:
 
         if updates:
             Category.objects.bulk_update(updates, ["sort_order"])
+
+    @staticmethod
+    def delete(category: Category):
+        category.delete()
