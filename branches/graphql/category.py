@@ -12,22 +12,28 @@ from utils.graphql import BaseConnection, ConnectionField
 
 class CategoryNode(DjangoObjectType):
     id = graphene.ID(source="pk", required=True)
+    subcategories = graphene.List(lambda: CategoryNode)
 
     class Meta:
         model = Category
-        exclude = []
+        exclude = ["parent"]
         filter_fields = {
             "is_active": ["exact"],
             "name": ["icontains"],
+            "parent": ["isnull"],
         }
         interfaces = (graphene.relay.Node,)
         connection_class = BaseConnection
+
+    def resolve_subcategories(self, info, **kwargs):
+        return self.subcategories.all()
 
 
 class CreateCategoryInput(graphene.InputObjectType):
     name = graphene.String(required=True)
     sort_order = graphene.Int(required=False)
     is_active = graphene.Boolean(default_value=True)
+    parent_id = graphene.ID(required=False)
 
 
 class CreateCategory(graphene.Mutation):
@@ -44,6 +50,7 @@ class CreateCategory(graphene.Mutation):
                 name=input.name,
                 sort_order=input.sort_order or 0,
                 is_active=input.is_active,
+                parent_id=input.parent_id,
             )
         except ValidationError as exc:
             raise ValidationGraphQLError(fields=exc.message_dict)
@@ -55,6 +62,7 @@ class UpdateCategoryInput(graphene.InputObjectType):
     name = graphene.String(required=False)
     sort_order = graphene.Int(required=False)
     is_active = graphene.Boolean(required=False)
+    parent_id = graphene.ID(required=False)
 
 
 class UpdateCategory(graphene.Mutation):
