@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-11 21:12+0000\n"
+"POT-Creation-Date: 2026-07-16 11:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,6 +21,10 @@ msgstr ""
 #: branches/graphql/branch.py:81
 msgid "Branch not found."
 msgstr "Sucursal no encontrada."
+
+#: branches/graphql/category.py:80 branches/graphql/category.py:130
+msgid "Category not found."
+msgstr "Categoría no encontrada."
 
 #: branches/models/branch.py:64
 msgid "Sunday"
@@ -70,11 +74,15 @@ msgstr "horarios de las sucursales"
 msgid "name"
 msgstr "nombre"
 
-#: branches/models/category.py:18
+#: branches/models/category.py:16
+msgid "parent category"
+msgstr "categoría padre"
+
+#: branches/models/category.py:26
 msgid "category"
 msgstr "categoría"
 
-#: branches/models/category.py:19
+#: branches/models/category.py:27
 msgid "categories"
 msgstr "categorías"
 
