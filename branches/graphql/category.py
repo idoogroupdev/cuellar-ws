@@ -135,6 +135,27 @@ class DeleteCategory(graphene.Mutation):
         return DeleteCategory(success=True)
 
 
+class SyncSubcategoriesInput(graphene.InputObjectType):
+    parent_id = graphene.ID(required=True)
+    names = graphene.List(graphene.String, required=True)
+
+
+class SyncSubcategories(graphene.Mutation):
+    success = graphene.Boolean()
+
+    class Arguments:
+        input = SyncSubcategoriesInput(required=True)
+
+    @staff_member_required
+    @permission_required(Category, "change")
+    def mutate(self, info, input: SyncSubcategoriesInput):
+        try:
+            CategoryService.sync_subcategories(input.parent_id, input.names)
+        except ValidationError as exc:
+            raise ValidationGraphQLError(fields=exc.message_dict)
+        return SyncSubcategories(success=True)
+
+
 class Query(graphene.ObjectType):
     all_categories = ConnectionField(CategoryNode)
 
@@ -149,6 +170,7 @@ class Mutation(graphene.ObjectType):
     update_category = UpdateCategory.Field()
     reorder_category = ReorderCategory.Field()
     delete_category = DeleteCategory.Field()
+    sync_subcategories = SyncSubcategories.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
