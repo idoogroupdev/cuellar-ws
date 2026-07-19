@@ -1,0 +1,31 @@
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  cicd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+      - name: Build docker image for web-antd
+        run: docker build -t idoogroup/cuellar-ws-dev .
+      - name: Log in
+        run: docker login -u idoogroup -p ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Push docker image
+        run: docker push idoogroup/cuellar-ws-dev
+      # Deploy Server
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.IP }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "Deploying on Server ..."
+            cd ${{ vars.PATH }}
+            git fetch origin
+            git reset --hard origin/dev
+            cd ${{ vars.PATHC }}
+            docker stack deploy -c cuellar.yml --resolve-image always cuellar
+            docker service update --force ${{ secrets.SERVICE }}
