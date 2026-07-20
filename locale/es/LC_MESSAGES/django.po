@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-16 11:26+0000\n"
+"POT-Creation-Date: 2026-07-20 20:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,9 +100,18 @@ msgstr "Día de la semana no válido"
 msgid "Day of week is duplicated"
 msgstr "Día de la semana está duplicado"
 
-#: branches/services/category_service.py:48
+#: branches/services/category_service.py:22
+#, python-format
+msgid "Category not found: %(category)s"
+msgstr "Categoría no encontrada: %(category)s"
+
+#: branches/services/category_service.py:66
 msgid "One or more categories do not exist."
 msgstr "Una o más categorías no existen."
+
+#: branches/services/category_service.py:88
+msgid "Category name is duplicated"
+msgstr "Nombre de categoría duplicado"
 
 #: config/middleware.py:27
 msgid "Your session has been closed."
